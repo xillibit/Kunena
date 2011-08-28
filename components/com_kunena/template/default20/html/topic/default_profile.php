@@ -11,7 +11,9 @@
 defined ( '_JEXEC' ) or die ();
 ?>
 						<ul class="kpost-user-details">
-							<li class="kpost-user-username"><?php echo $this->profile->getLink($this->message->name) ?></li>
+							<li class="kpost-user-username"><?php echo $this->profile->getLinkNoStyle($this->message->name) ?></li>
+							<!-- Put the logic out of template -->
+							<li class="kpost-user-username-optional">[<?php echo $this->profile->getLink($this->message->name) ?>]</li>
 							<?php if (!empty($this->usertype)) : ?><li class="kpost-user-type">( <?php echo $this->escape($this->usertype) ?> )</li><?php endif ?>
 							<?php $avatar = $this->profile->getAvatarImage ('kavatar', 'post'); if ($avatar) : ?>
 							<li class="kpost-user-avatar">

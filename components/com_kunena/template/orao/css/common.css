@@ -756,6 +756,10 @@ div#mbCenter div.tk-mb-inboxlink {
 #kunena .kpost-user-username a {
 	font-size: 16px;
 }
+#kunena .kpost-user-username-optional a {
+	font-size: 10px;
+	color: #A9A9A9;
+}
 #kunena .kpost-user-avatar img {
 	border: 1px solid #BCBCBC;
 }

@@ -203,6 +203,10 @@ Pink forum dark:			#ffd0ff 		RGB: 255/208/255
 #Kunena a.kwho-blocked {
 	color: #ff0000 !important;
 }
+#Kunena .kpost-username-optional, #Kunena a.kpost-username-optional {
+	font-size: 1.022em;
+	color: #A9A9A9 !important;
+}
 
 /* MENU
 ----------------------------------------------------------------------------------------------- */

@@ -268,6 +268,30 @@ class KunenaUser extends JObject {
 		return $this->_link[$key];
 	}
 
+	public function getLinkNoStyle($name = null, $title = null, $class = null, $rel = 'nofollow') {
+		if ( $this->_config->optionnal_username == 0 || !$this->userid ) return;
+
+		if (!$name) {
+			if ( $this->_config->optionnal_username == 1 ) {
+				$name = $this->username;
+			} elseif ( $this->_config->optionnal_username == 2 ) {
+				$name = $this->name;
+			}
+		}
+		$key = "{$name}.{$title}.{$rel}";
+		if (empty($this->_link[$key])) {
+			if (!$title) {
+				$title = JText::sprintf('COM_KUNENA_VIEW_USER_LINK_TITLE', $this->getName());
+			}
+			$link = $this->getURL ();
+			if (! empty ( $link ))
+				$this->_link[$key] = "<a class=\"{$class}\" href=\"{$link}\" title=\"{$title}\" rel=\"{$rel}\">{$name}</a>";
+			else
+				$this->_link[$key] = "<span class=\"{$class}\">{$name}</span>";
+		}
+		return $this->_link[$key];
+	}
+
 	public function GetURL($xhtml = true) {
 		if (!$this->exists()) return;
 		return KunenaFactory::getProfile ()->getProfileURL ( $this->userid, '', $xhtml );

@@ -46,6 +46,9 @@ defined ( '_JEXEC' ) or die ();
 		<li class="kpost-username">
 			<?php echo $this->profile->getLink() ?>
 		</li>
+		<li>
+			[<?php echo $this->profile->getLinkNoStyle('', '', 'kpost-username-optional') ?>]
+		</li>
 		<?php if (!empty($this->usertype)) : ?>
 		<li class="kpost-usertype">
 			<span class = "kmsgusertype">( <?php echo $this->escape($this->usertype) ?> )</span>

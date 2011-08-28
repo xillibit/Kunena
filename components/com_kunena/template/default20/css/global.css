@@ -898,6 +898,10 @@ body {line-height:1.5;}
 #kunena .kpost-user-username a {
 	text-decoration: none;
 }
+#kunena .kpost-user-username-optional a {
+	font-size: 10px;
+	color: #A9A9A9;
+}
 #kunena .kpost-user-avatar img {
 	margin: 5px 0;
 	padding: 1px;

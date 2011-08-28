@@ -383,6 +383,7 @@ class CKunenaConfig extends CKunenaConfigBase {
 	var $hold_newusers_posts = 0;
 	var $hold_guest_posts = 0;
 	var $attachment_limit = 8;
+	var $optionnal_username = 0;
 
 	public function __construct($userinfo = null) {
 		parent::__construct ();
