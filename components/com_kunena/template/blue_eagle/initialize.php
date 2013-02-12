@@ -13,18 +13,6 @@ $app = JFactory::getApplication();
 $document = JFactory::getDocument();
 $template = KunenaFactory::getTemplate();
 
-// Template requires Mootools 1.2 framework
-$template->loadMootools();
-
-// We load mediaxboxadvanced library only if configuration setting allow it
-if ( KunenaFactory::getConfig()->lightbox == 1 ) {
-	$template->addStyleSheet ( 'css/mediaboxAdv.css');
-	$template->addScript( 'js/mediaboxAdv.js' );
-}
-
-// New Kunena JS for default template
-$template->addScript ( 'js/default.js' );
-
 $rtl = JFactory::getLanguage()->isRTL();
 $skinner = $template->params->get('enableSkinner', 0);
 
@@ -186,3 +174,15 @@ $styles .= <<<EOF
 EOF;
 
 $document->addStyleDeclaration($styles);
+
+// Template requires Mootools 1.2 framework
+$template->loadMootools();
+
+// We load mediaxboxadvanced library only if configuration setting allow it
+if ( KunenaFactory::getConfig()->lightbox == 1 ) {
+	$template->addStyleSheet ( 'css/mediaboxAdv.css');
+	$template->addScript( 'js/mediaboxAdv.js' );
+}
+
+// New Kunena JS for default template
+$template->addScript ( 'js/default.js' );
