@@ -55,8 +55,23 @@ class KunenaAdminModelTrash extends KunenaModel {
 			$value = 'desc';
 		$this->setState ( 'list.direction', $value );
 
-		$value = $this->getUserStateFromRequest ( 'com_kunena.admin.trash.list.search', 'search', '', 'string' );
+		$value = $this->getUserStateFromRequest ( 'com_kunena.admin.trash.list.search', 'filter_search', '', 'string' );
 		$this->setState ( 'list.search', $value );
+
+		$filterTitle = $this->getUserStateFromRequest ( 'com_kunena.admin.trash.list.filter_title', 'filter_title', '', 'string' );
+		$this->setState ( 'list.filter_title', $filterTitle );
+
+		$filterCategory = $this->getUserStateFromRequest ( 'com_kunena.admin.trash.list.filter_category', 'filter_category', '', 'string' );
+		$this->setState ( 'list.filter_category', $filterCategory );
+
+		$filterIp = $this->getUserStateFromRequest ( 'com_kunena.admin.trash.list.filter_ip', 'filter_ip', '', 'string' );
+		$this->setState ( 'list.filter_ip', $filterIp );
+
+		$filterAuthor = $this->getUserStateFromRequest ( 'com_kunena.admin.trash.list.filter_author', 'filter_author', '', 'string' );
+		$this->setState ( 'list.filter_author', $filterAuthor );
+
+		$filterDate = $this->getUserStateFromRequest ( 'com_kunena.admin.trash.list.filter_date', 'filter_date', '', 'string' );
+		$this->setState ( 'list.filter_date', $filterDate );
 
 		$value = $this->getUserStateFromRequest ( "com_kunena.admin.trash.list.levels", 'levellimit', 10, 'int' );
 		$this->setState ( 'list.levels', $value );
@@ -89,7 +104,7 @@ class KunenaAdminModelTrash extends KunenaModel {
 		$db = JFactory::getDBO();
 		$where = '';
 		if ($this->getState ( 'list.search')) {
-			$where = '( m.subject LIKE '.$db->Quote( '%'.$db->getEscaped( $this->getState ( 'list.search'), true ).'%', false ).' OR m.name LIKE '.$db->Quote( '%'.$db->getEscaped( $this->getState ( 'list.search'), true ).'%', false ).' OR m.id LIKE '.$db->Quote( '%'.$db->getEscaped( $this->getState ( 'list.search'), true ).'%', false ) . ' )';
+			$where = '( m.subject LIKE '.$db->Quote( '%'.$db->escape( $this->getState ( 'list.search'), true ).'%', false ).' OR m.name LIKE '.$db->Quote( '%'.$db->escape( $this->getState ( 'list.search'), true ).'%', false ).' OR m.id LIKE '.$db->Quote( '%'.$db->escape( $this->getState ( 'list.search'), true ).'%', false ) . ' )';
 		}
 
 		$orderby = $this->state->get('list.ordering').' '.$this->state->get('list.direction');
@@ -119,9 +134,9 @@ class KunenaAdminModelTrash extends KunenaModel {
 	 */
 	public function getViewOptions() {
 		$view_options = array();
-		$view_options[] = JHTML::_ ( 'select.option', 'topics',JText::_( 'COM_KUNENA_TRASH_TOPICS' ));
-		$view_options[] = JHTML::_ ( 'select.option', 'messages',JText::_( 'COM_KUNENA_TRASH_MESSAGES'));
-		$this->view_options_list = JHTML::_ ( 'select.genericlist', $view_options, 'view_selected', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', $this->state->get('list.view_selected') );
+		$view_options[] = JHtml::_ ( 'select.option', 'topics',JText::_( 'COM_KUNENA_TRASH_TOPICS' ));
+		$view_options[] = JHtml::_ ( 'select.option', 'messages',JText::_( 'COM_KUNENA_TRASH_MESSAGES'));
+		$this->view_options_list = JHtml::_ ( 'select.genericlist', $view_options, 'view_selected', 'class="inputbox" size="1" onchange="this.form.submit()"', 'value', 'text', $this->state->get('list.view_selected') );
 
 		return $this->view_options_list;
 	}
@@ -136,7 +151,7 @@ class KunenaAdminModelTrash extends KunenaModel {
 		$db = JFactory::getDBO();
 		$where = '';
 		if ($this->getState ( 'list.search')) {
-			$where = ' AND (tt.subject LIKE '.$db->Quote( '%'.$db->getEscaped( $this->getState ( 'list.search'), true ).'%', false ).' OR tt.first_post_userid LIKE '.$db->Quote( '%'.$db->getEscaped( $this->getState ( 'list.search'), true ).'%', false ).' OR tt.id LIKE '.$db->Quote( '%'.$db->getEscaped( $this->getState ( 'list.search'), true ).'%', false ) . ')';
+			$where = ' AND (tt.subject LIKE '.$db->Quote( '%'.$db->escape( $this->getState ( 'list.search'), true ).'%', false ).' OR tt.first_post_userid LIKE '.$db->Quote( '%'.$db->escape( $this->getState ( 'list.search'), true ).'%', false ).' OR tt.id LIKE '.$db->Quote( '%'.$db->escape( $this->getState ( 'list.search'), true ).'%', false ) . ')';
 		}
 
 		$orderby = $this->state->get('list.ordering').' '.$this->state->get('list.direction');

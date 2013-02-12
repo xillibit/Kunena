@@ -33,7 +33,7 @@ $this->document->addScriptDeclaration("Joomla.submitbutton = function(task) {
 		<div class="kbody">
 			<form action="<?php echo KunenaRoute::_('index.php?option=com_kunena&view=announcement') ?>" method="post" id="adminForm" name="adminForm">
 				<input type="hidden" name="boxchecked" value="0" />
-				<?php echo JHTML::_( 'form.token' ); ?>
+				<?php echo JHtml::_( 'form.token' ); ?>
 
 <table class="kannouncement">
 	<tbody id="kannouncement_body">
@@ -59,7 +59,7 @@ $this->document->addScriptDeclaration("Joomla.submitbutton = function(task) {
 			</td>
 			<?php  if ( !empty($this->announcementActions) ) : ?>
 			<td colspan="4" class="kcol krowmoderation">
-				<?php echo JHTML::_('select.genericlist', $this->announcementActions, 'task', 'class="inputbox kchecktask" size="1"', 'value', 'text', 0, 'kchecktask'); ?>
+				<?php echo JHtml::_('select.genericlist', $this->announcementActions, 'task', 'class="inputbox kchecktask" size="1"', 'value', 'text', 0, 'kchecktask'); ?>
 				<input type="submit" name="kcheckgo" class="kbutton" value="<?php echo JText::_('COM_KUNENA_GO') ?>" />
 			</td>
 			<?php endif; ?>

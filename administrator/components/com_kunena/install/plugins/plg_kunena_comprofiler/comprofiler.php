@@ -15,7 +15,7 @@ class plgKunenaComprofiler extends JPlugin {
 
 	public function __construct(&$subject, $config) {
 		// Do not load if Kunena version is not supported or Kunena is offline
-		if (!(class_exists('KunenaForum') && KunenaForum::isCompatible('2.0') && KunenaForum::installed())) return;
+		if (!(class_exists('KunenaForum') && KunenaForum::isCompatible('3.0') && KunenaForum::installed())) return;
 
 		$app = JFactory::getApplication ();
 
@@ -37,7 +37,7 @@ class plgKunenaComprofiler extends JPlugin {
 
 		$this->loadLanguage ( 'plg_kunena_comprofiler.sys', JPATH_ADMINISTRATOR ) || $this->loadLanguage ( 'plg_kunena_comprofiler.sys', KPATH_ADMIN );
 
-		$this->path = dirname ( __FILE__ ) . '/comprofiler';
+		$this->path = dirname ( __FILE__ );
 		require_once "{$this->path}/integration.php";
 
 		if ($app->isAdmin() && (! isset ( $ueConfig ['version'] ) || version_compare ( $ueConfig ['version'], $this->minCBVersion ) < 0)) {

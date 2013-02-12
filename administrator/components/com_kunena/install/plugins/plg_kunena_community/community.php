@@ -13,7 +13,7 @@ defined ( '_JEXEC' ) or die ();
 class plgKunenaCommunity extends JPlugin {
 	public function __construct(&$subject, $config) {
 		// Do not load if Kunena version is not supported or Kunena is offline
-		if (!(class_exists('KunenaForum') && KunenaForum::isCompatible('2.0') && KunenaForum::installed())) return;
+		if (!(class_exists('KunenaForum') && KunenaForum::isCompatible('3.0') && KunenaForum::installed())) return;
 
 		// Do not load if JomSocial is not installed
 		$path = JPATH_ROOT . '/components/com_community/libraries/core.php';
@@ -24,7 +24,7 @@ class plgKunenaCommunity extends JPlugin {
 
 		$this->loadLanguage ( 'plg_kunena_community.sys', JPATH_ADMINISTRATOR ) || $this->loadLanguage ( 'plg_kunena_community.sys', KPATH_ADMIN );
 
-		$this->path = dirname ( __FILE__ ) . '/community';
+		$this->path = dirname ( __FILE__ );
 	}
 
 	/*

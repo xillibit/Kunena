@@ -50,7 +50,7 @@ class plgQuickiconKunena extends JPlugin {
 
 			if (!$valid) {
 				// If information is not valid, update it asynchronously.
-				$ajax_url = json_encode(JURI::base().'index.php?option=com_kunena&view=liveupdate&task=ajax');
+				$ajax_url = json_encode(JUri::base().'index.php?option=com_kunena&view=liveupdate&task=ajax');
 				$script = "window.addEvent('domready', function() {
 	var com_kunena_updatecheck_ajax_structure = {
 		onSuccess: function(msg, responseXML) {

@@ -39,28 +39,84 @@ class KunenaAdminViewCategories extends KunenaView {
 	protected function setToolBarEdit() {
 		// Set the titlebar text
 		JToolBarHelper::title ( JText::_('COM_KUNENA'), 'kunena.png' );
-		if (version_compare(JVERSION, '1.7','>')) {
-			JToolBarHelper::apply('apply');
-			JToolBarHelper::save('save');
-			JToolBarHelper::save2new('save2new');
+		JToolBarHelper::apply('apply');
+		JToolBarHelper::save('save');
+		JToolBarHelper::save2new('save2new');
 
-			// If an existing item, can save to a copy.
-			if ($this->category->exists()) {
-				JToolBarHelper::save2copy('save2copy');
-			}
-		} else {
-			JToolBarHelper::save();
+		// If an existing item, can save to a copy.
+		if ($this->category->exists()) {
+			JToolBarHelper::save2copy('save2copy');
 		}
 		JToolBarHelper::cancel();
 	}
 	protected function setToolBarDefault() {
-		// Set the titlebar text
-		JToolBarHelper::title ( JText::_('COM_KUNENA'), 'kunena.png' );
+		JToolBarHelper::title ( JText::_('COM_KUNENA').': '.JText::_('COM_KUNENA_CATEGORY_MANAGER'));
+		//TODO STRING
+		JToolBarHelper::addNew ('add', 'New Category');
+		JToolBarHelper::editList ();
 		JToolBarHelper::publish ();
 		JToolBarHelper::unpublish ();
-		JToolBarHelper::addNew ();
-		JToolBarHelper::editList ();
 		JToolBarHelper::deleteList ();
 		//JToolBarHelper::back ( JText::_ ( 'Home' ), 'index.php?option=com_kunena' );
+	}
+
+	/**
+	 * Returns an array of standard published state filter options.
+	 *
+	 * @return	string	The HTML code for the select tag
+	 */
+	public function publishedOptions()
+	{
+		// Build the active state filter options.
+		$options	= array();
+		$options[]	= JHtml::_('select.option', '1', 'On');
+		$options[]	= JHtml::_('select.option', '0', 'Off');
+
+		return $options;
+	}
+
+	/**
+	 * Returns an array of locked filter options.
+	 *
+	 * @return	string	The HTML code for the select tag
+	 */
+	public function lockOptions()
+	{
+		// Build the active state filter options.
+		$options	= array();
+		$options[]	= JHtml::_('select.option', '1', 'On');
+		$options[]	= JHtml::_('select.option', '0', 'Off');
+
+		return $options;
+	}
+
+	/**
+	 * Returns an array of review filter options.
+	 *
+	 * @return	string	The HTML code for the select tag
+	 */
+	public function reviewOptions()
+	{
+		// Build the active state filter options.
+		$options	= array();
+		$options[]	= JHtml::_('select.option', '1', 'On');
+		$options[]	= JHtml::_('select.option', '0', 'Off');
+
+		return $options;
+	}
+
+	/**
+	 * Returns an array of type filter options.
+	 *
+	 * @return	string	The HTML code for the select tag
+	 */
+	public function anonymousOptions()
+	{
+		// Build the active state filter options.
+		$options	= array();
+		$options[]	= JHtml::_('select.option', '1', 'On');
+		$options[]	= JHtml::_('select.option', '0', 'Off');
+
+		return $options;
 	}
 }

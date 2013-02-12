@@ -9,7 +9,6 @@
  **/
 defined ( '_JEXEC' ) or die ();
 
-jimport('joomla.application.component.controller');
 jimport('joomla.filesystem.file');
 jimport('joomla.filesystem.folder');
 jimport('joomla.filesystem.archive');
@@ -19,7 +18,7 @@ jimport('joomla.filesystem.archive');
  *
  * @since		2.0
  */
-class KunenaControllerInstall extends JController {
+class KunenaControllerInstall extends JControllerLegacy {
 	public function remind() {
 		// User wants to continue using the old version
 		$app = JFactory::getApplication();
@@ -66,7 +65,7 @@ class KunenaControllerInstall extends JController {
 		$this->setRedirect(JRoute::_($this->getUrl(), false));
 	}
 
-	public function display() {
+	public function display($cachable = false, $urlparams = Array()) {
 		$view = JRequest::getCmd ( 'view' );
 		$task = JRequest::getCmd ( 'task' );
 
@@ -276,7 +275,7 @@ class KunenaControllerInstall extends JController {
 		$table = str_replace('_', '\_', "{$db->getPrefix()}%_version");
 		$query = "SHOW TABLES LIKE {$db->quote($table)}";
 		$db->setQuery ( $query );
-		$tables = (array)$db->loadResultArray();
+		$tables = (array) $db->loadColumn();
 		if (in_array("{$db->getPrefix()}kunena_version", $tables)) {
 			$table = '#__kunena_version';
 		} elseif (in_array("{$db->getPrefix()}fb_version", $tables)) {
@@ -286,7 +285,7 @@ class KunenaControllerInstall extends JController {
 		}
 
 		// Load Kunena version
-		$query = "SELECT version FROM {$db->nameQuote($table)} ORDER BY `id` DESC";
+		$query = "SELECT version FROM {$db->quoteName($table)} ORDER BY `id` DESC";
 		$db->setQuery($query, 0, 1);
 		$version = $db->loadResult();
 		// Ignore FireBoard
@@ -321,6 +320,6 @@ class KunenaControllerInstall extends JController {
 	}
 
 	protected function getUrl() {
-		return 'index.php?option=com_kunena&view=install&task=prepare&start=1&'.JUtility::getToken().'=1';
+		return 'index.php?option=com_kunena&view=install&task=prepare&start=1&'.JSession::getFormToken().'=1';
 	}
 }
