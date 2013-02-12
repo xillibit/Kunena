@@ -16,13 +16,6 @@ class KunenaTemplateMirage extends KunenaTemplate {
 	public function initialize() {
 		KunenaFactory::loadLanguage('com_kunena.tpl_mirage');
 
-		// Template requires Mootools 1.2+ framework
-		$this->loadMootools();
-		JHTML::_('behavior.tooltip');
-
-		// New Kunena JS for default template
-		$this->addScript ( 'js/default.js' );
-
 		//$this->addStyleSheet ( 'css/mirage.css' );
 
 		$this->addStyleSheet ( 'css/reset.css' );
@@ -52,10 +45,16 @@ class KunenaTemplateMirage extends KunenaTemplate {
 		$this->addStyleSheet ( 'css/uploader.css' );
 		$this->addStyleSheet ( 'css/quirks.css' );
 
-
 		//$this->addIEStyleSheet ( 'css/ie.css' );
 		//$this->addIEStyleSheet ( 'css/ie7.css', 'IE 7' );
 		//$this->addIEStyleSheet ( 'css/ie8.css', 'IE 8' );
+		
+		// Template requires Mootools 1.2+ framework
+		$this->loadMootools();
+		JHTML::_('behavior.tooltip');
+
+		// New Kunena JS for default template
+		$this->addScript ( 'js/default.js' );
 
 		if ( KunenaFactory::getConfig()->lightbox == 1 ) {
 			// Load mediaxboxadvanced library if enabled in configuration
