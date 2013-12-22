@@ -1748,6 +1748,30 @@ class KunenaModelInstall extends JModelLegacy {
 
 		return true;
 	}
+
+	/**
+	 * Method to generate checksum on file under Kunena template directories
+	 *
+	 * @since 3.1
+	 *
+	 * @return void
+	 */
+	public function generateChecksum()
+	{
+		jimport('joomla.filesystem.folder');
+
+		$fp = fopen(JPATH_COMPONENT_SITE . '/template/checksum.txt', 'w');
+
+		$files = JFolder::files(JPATH_COMPONENT_SITE . '/template', '', true, true, array('.txt'));
+
+		foreach ($files as $file)
+		{
+			$checksum = sha1_file($file);
+			fwrite($fp, $file . ',' . $checksum . ' ' . PHP_EOL);
+		}
+
+		fclose($fp);
+	}
 }
 
 class KunenaInstallerException extends Exception {

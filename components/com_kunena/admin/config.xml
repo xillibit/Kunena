@@ -1777,6 +1777,9 @@
 					value="1">JYES</option>
 		</field>
 	</fieldset>-->
+	<fieldset name="checksum" label="COM_KUNENA_VERIFY_CHECKSUM" description="COM_KUNENA_VERIFY_CHECKSUM_DESC">	
+		<field name="verifyChecksum" type="kunenaverifychecksum" label="JCONFIG_VERIFY_CHECKSUM_ON_FILES" description="JCONFIG_VERIFY_CHECKSUM_ON_FILES_DESC" />
+	</fieldset>	
 	<fieldset name="permissions" label="JCONFIG_PERMISSIONS_LABEL" description="JCONFIG_PERMISSIONS_DESC">
 		<field name="rules" type="rules" label="JCONFIG_PERMISSIONS_LABEL" class="inputbox" filter="rules" validate="rules" component="com_kunena" section="component" />
 	</fieldset>
