@@ -707,10 +707,10 @@ DEFAULT_CALLBACKS = {
     _results = [];
     for (_i = 0, _len = items.length; _i < _len; _i++) {
       item = items[_i];
-      item.atwho_order = item[search_key].toLowerCase().indexOf(query.toLowerCase());
-      if (item.atwho_order > -1) {
+      /*item.atwho_order = item[search_key].toLowerCase().indexOf(query.toLowerCase());
+      if (item.atwho_order > -1) {*/
         _results.push(item);
-      }
+     // }
     }
     return _results.sort(function(a, b) {
       return a.atwho_order - b.atwho_order;

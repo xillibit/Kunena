@@ -63,7 +63,7 @@ jQuery(document).ready(function() {
 				})
 				.atwho({
 					at: "@",
-					tpl:"<li data-value='${key}'>${name} <img src='${url}' height='20' width='20' /></li>",
+					tpl:"<li data-value='${key}'>${avatar} ${username}</li>",
 					callbacks: {
 						remote_filter: function(query, callback) {
 							if(query.length > 0) {

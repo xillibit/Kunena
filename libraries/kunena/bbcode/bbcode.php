@@ -1008,6 +1008,15 @@ class KunenaBbcodeLibrary extends BBCodeLibrary {
 				'content' => BBCODE_REQUIRED,
 				'plain_content' => array(),
 			),
+
+			'mention' => array(
+					'mode' => BBCODE_MODE_LIBRARY,
+					'method' => 'DoMention',
+					'class' => 'block',
+					'allow_in' => array('listitem', 'block', 'columns'),
+					'content' => BBCODE_REQUIRED,
+					'plain_content' => array(),
+			),
 	);
 
 	function __construct()
@@ -2747,5 +2756,35 @@ class KunenaBbcodeLibrary extends BBCodeLibrary {
 		$ebay_item = $cache->call(array('KunenaBbcodeLibrary', 'getEbayItem'), $ItemID);
 
 		return $ebay_item;
+	}
+
+	/**
+	 * @param KunenaBBCode $bbcode
+	 * @param $action
+	 * @param $name
+	 * @param $default
+	 * @param $params
+	 * @param $content
+	 * @return bool|string
+	 */
+	public function DoMention($bbcode, $action, $name, $default, $params, $content)
+	{
+		if ($action == BBCODE_CHECK)
+		{
+			return true;
+		}
+
+		$userid = $params['userid'];
+
+		$user = KunenaUserHelper::get($userid);
+
+		$mail = JFactory::getMailer();
+		$mail->setSender(array($user->username, $user->email));
+		$mail->setSubject($mailsubject);
+		$mail->setBody($content);
+
+		KunenaEmail::send($mail, array($user->email));
+
+		return '@<b>' . $user->getLink() . '</b>';
 	}
 }

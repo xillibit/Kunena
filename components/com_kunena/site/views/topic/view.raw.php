@@ -85,19 +85,25 @@ class KunenaViewTopic extends KunenaView
 	 */
 	public function displayUserMentions()
 	{
+		$response = array();
+
 		$topic_id = $this->app->input->get('topic_id', 0 ,'int');
+		$search = $this->app->input->get('search');
 
-		$topic = KunenaForumTopicHelper::get($topic_id);
+		$finder = new KunenaUserFinder;
+		$finder
+			->filterByName($search);
 
-		$topics = array($topic);
+		$users = $finder->find();
 
-		// Get users who have participed to the given topic
-		$list_user = KunenaForumTopicUserHelper::getUserIds($topics);
-
-		die();
-
-		// Load user object wit all ids
-		KunenaUserHelper::loadUsers(array());
+		foreach($users as $user)
+		{
+			$tu['key'] = '[mention userid=' . $user->userid . ']' . $user->username. '[/mention]';
+			$tu['userid'] = $user->userid;
+			$tu['username'] = $user->username;
+			$tu['avatar'] = $user->getAvatarImage('kavatar', 24, 24);
+			$response['users'][] = $tu;
+		}
 
 		// Set the MIME type and header for JSON output.
 		$this->document->setMimeEncoding('application/json');
