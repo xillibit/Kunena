@@ -26,28 +26,39 @@ else
 {
 	$url_href = JUri::root() . $attachment->getUrl();
 }
+
+if ($attachment->protected&& !KunenaFactory::getConfig()->access_component) {
+	$icon = 'icon-image';
+}
+else
+{
+	$icon = 'icon-flag-2';
+}
 ?>
 
 <?php if ($attachment->protected && !KunenaFactory::getConfig()->access_component) : ?>
 	<a href="<?php echo $url_href2; ?>" title="<?php echo $attachment->getFilename(); ?>">
 <?php else : ?>
 	<a href="<?php echo $url_href; ?>" title="<?php echo $attachment->getFilename(); ?>">
-<?php endif; ?>
+		<?php endif; ?>
 
-<?php
+		<?php
 
-	if ($attachment->isImage() && !$attachment->protected)
-	{
-		echo '<img src="' . JUri::root() . $attachment->getUrl(true) . ' " height="40" width="40" />';
-	}
-	elseif ($attachment->isImage() && $attachment->protected)
-	{
-		echo '<img src="' . JUri::root() . $url_href . ' " height="40" width="40" />';
-	}
-	else
-	{
-		echo '<i class="icon-flag-2 icon-big"></i>';
-	}
-	?>
-</a>
-
+		if ($attachment->isImage() && !$attachment->protected)
+		{
+			echo '<img src="' . JUri::root() . $attachment->getUrl(true) . ' " height="40" width="40" />';
+		}
+		elseif ($attachment->isImage() && $attachment->protected && KunenaFactory::getConfig()->access_component)
+		{
+			echo '<img src="' . JUri::root() . $url_href . ' " height="40" width="40" />';
+		}
+		elseif ($attachment->isImage())
+		{
+			echo '<i class="'. $icon .' icon-big"></i>';
+		}
+		else
+		{
+			echo '<i class="icon-flag-2 icon-big"></i>';
+		}
+		?>
+	</a>
