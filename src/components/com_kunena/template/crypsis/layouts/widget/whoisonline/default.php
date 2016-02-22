@@ -64,24 +64,14 @@ defined('_JEXEC') or die;
 				<?php if (!empty($this->onlineList)) : ?>
 				<div>
 					<span><?php echo JText::_('COM_KUNENA_LEGEND'); ?>:</span>
-					<span class="kwho-admin">
-						<i class="icon icon-user"></i><?php echo JText::_('COM_KUNENA_COLOR_ADMINISTRATOR'); ?>
-					</span>
-					<span class="kwho-globalmoderator">
-						<i class="icon icon-user"></i><?php echo JText::_('COM_KUNENA_COLOR_GLOBAL_MODERATOR'); ?>
-					</span>
-					<span class="kwho-moderator">
-						<i class="icon icon-user"></i><?php echo JText::_('COM_KUNENA_COLOR_MODERATOR'); ?>
-					</span>
-					<span class="kwho-banned">
-						<i class="icon icon-user"></i><?php echo JText::_('COM_KUNENA_COLOR_BANNED'); ?>
-					</span>
-					<span class="kwho-user">
-						<i class="icon icon-user"></i><?php echo JText::_('COM_KUNENA_COLOR_USER'); ?>
-					</span>
-					<span class="kwho-guest">
-						<i class="icon icon-user"></i><?php echo JText::_('COM_KUNENA_COLOR_GUEST'); ?>
-					</span>
+          <?php $list_whoisonline = array(); foreach ($this->xml->children() as $attr):
+            $name = (string)$attr->action->attributes()->name;
+            $display_whoisonline = (int)$attr->action->attributes()->display_whoisonline;
+            if ( $display_whoisonline ):
+              $list_whoisonline[] = '<span class = "kwho-'.$name.'" title = "'.JText::_($name).'"> '.JText::_($name).'</span>&nbsp;';
+
+           endif; endforeach;
+					 echo implode(', ',$list_whoisonline); ?>
 				</div>
 				<?php endif; ?>
 			</ul>

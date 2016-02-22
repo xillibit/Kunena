@@ -64,6 +64,10 @@ defined('_JEXEC') or die();
 								<i class="icon-big icon-trash" alt="<?php echo JText::_('COM_KUNENA_CPANEL_LABEL_TRASH') ?>"></i><br/>
 								<span><?php echo JText::_('COM_KUNENA_CPANEL_LABEL_TRASH') ?></span>
 							</a>
+							<a class="btn" href="index.php?option=com_kunena&view=usertypes">
+								<img src="components/com_kunena/media/icons/large/usertypes.png" alt="<?php echo JText::_('COM_KUNENA_CPANEL_LABEL_USERTYPES') ?>" /><br/>
+								<span><?php echo JText::_('COM_KUNENA_CPANEL_LABEL_USERTYPES') ?></span>
+							</a>
 						</div>
 						<div class="clearfix"></div>
 					</div>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<typeslist>
+  <types>
+    <action id="1" name="admin" title="COM_KUNENA_VIEW_ADMIN" joomla_group_id="0" display_whoisonline="1" rankid_associated="0"/>        
+  </types>
+  <types>
+    <action id="2" name="localadmin" title="COM_KUNENA_VIEW_ADMIN" joomla_group_id="0" display_whoisonline="0" rankid_associated="0"/>       
+  </types>
+  <types>
+    <action id="3" name="globalmoderator" title="COM_KUNENA_VIEW_GLOBAL_MODERATOR" joomla_group_id="0" display_whoisonline="1" rankid_associated="0"/>     
+  </types>
+  <types>
+    <action id="4" name="moderator" title="COM_KUNENA_VIEW_MODERATOR" joomla_group_id="0" display_whoisonline="1" rankid_associated="0"/>     
+  </types>
+  <types>
+    <action id="5" name="user" title="COM_KUNENA_VIEW_USER" joomla_group_id="0" display_whoisonline="1" rankid_associated="0"/>     
+  </types>
+  <types>
+    <action id="6" name="guest" title="COM_KUNENA_VIEW_VISITOR" joomla_group_id="0" display_whoisonline="1" rankid_associated="0"/>     
+  </types>
+  <types>
+    <action id="7" name="banned" title="COM_KUNENA_VIEW_BANNED" joomla_group_id="0" display_whoisonline="1" rankid_associated="0"/>     
+  </types>    
+</typeslist>

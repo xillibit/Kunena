@@ -91,5 +91,12 @@ $view = JFactory::getApplication()->input->getCmd('view', 'cpanel');
 		<a href="<?php echo JRoute::_('index.php?option=com_kunena&view=trash'); ?>">
 			<i class="icon-trash"></i> <?php echo JText::_('COM_KUNENA_TRASH_VIEW'); ?>
 		</a></li>
+		<li<?php if ($view == 'usertypes')
+	{
+		echo ' class="active"';
+	} ?>>
+		<a href="<?php echo JRoute::_('index.php?option=com_kunena&view=usertypes'); ?>">
+			<i class="icon-usertypes"></i> <?php echo JText::_('COM_KUNENA_USERTYPES_VIEW'); ?>
+		</a></li>
 </ul>
 <!-- /Main navigation -->

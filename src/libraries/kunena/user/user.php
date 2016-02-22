@@ -618,16 +618,28 @@ class KunenaUser extends JObject
 	 */
 	public function getType($catid = 0, $code = false)
 	{
-		static $types = array(
-			'admin'=>'COM_KUNENA_VIEW_ADMIN',
-			'localadmin'=>'COM_KUNENA_VIEW_ADMIN',
-			'globalmod'=>'COM_KUNENA_VIEW_GLOBAL_MODERATOR',
-			'moderator'=>'COM_KUNENA_VIEW_MODERATOR',
-			'user'=>'COM_KUNENA_VIEW_USER',
-			'guest'=>'COM_KUNENA_VIEW_VISITOR',
-			'banned'=>'COM_KUNENA_VIEW_BANNED',
-			'blocked'=>'COM_KUNENA_VIEW_BLOCKED'
-		);
+		$groups = JAccess::getGroupsByUser($this->userid);
+
+		$xml = KunenaUserHelper::loadUsertypesFromXML();
+
+		$joomla_usergroup = false;
+		$joomla_usergroup_type = '';
+		static $types = array();
+
+		foreach ($xml->children() as $attr)
+		{
+			$name = (string)$attr->action->attributes()->name;
+
+			$types[$name] = (string)$attr->action->attributes()->title;
+
+			$xml_joomla_group = (int)$attr->action->attributes()->joomla_group_id;
+
+			if(in_array($xml_joomla_group,$groups))
+			{
+				$joomla_usergroup = true;
+				$joomla_usergroup_type = (string)$attr->action->attributes()->name;
+			}
+		}
 
 		$adminCategories = KunenaAccess::getInstance()->getAdminStatus($this);
 		$moderatedCategories = KunenaAccess::getInstance()->getModeratorStatus($this);
@@ -690,6 +702,23 @@ class KunenaUser extends JObject
 	public function getRank($catid = 0, $type = null, $special = null)
 	{
 		$config = KunenaConfig::getInstance();
+		$groups = JAccess::getGroupsByUser($this->userid);
+
+		$xml = KunenaUserHelper::loadUsertypesFromXML();
+
+		$joomla_usergroup = false;
+		$joomla_usergroup_type = new stdClass();
+		foreach ($xml->children() as $attr) {
+			$xml_joomla_group = (int)$attr->action->attributes()->joomla_group_id;
+
+			if(in_array($xml_joomla_group,$groups))
+			{
+				$joomla_usergroup = true;
+				$joomla_usergroup_type->rankid_associated  = (string)$attr->action->attributes()->rankid_associated;
+				$joomla_usergroup_type->name = (string)$attr->action->attributes()->name;
+				$joomla_usergroup_type->title = (string)$attr->action->attributes()->title;
+			}
+		}
 
 		if (!$config->showranking)
 		{

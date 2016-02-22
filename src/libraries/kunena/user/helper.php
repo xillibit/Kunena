@@ -57,6 +57,36 @@ abstract class KunenaUserHelper
 	}
 
 	/**
+	 * Load usertypes from XML file
+	 *
+	 * @since 5.0
+	 *
+	 * @return string
+	 */
+	public static function loadUsertypesFromXML()
+	{
+		$path_to_xml = JPATH_ADMINISTRATOR . '/components/com_kunena/models/usertypes.xml';
+
+		if (file_exists($path_to_xml) )
+		{
+			$usertypes = simplexml_load_file($path_to_xml);
+
+			if ($usertypes instanceof SimpleXMLElement)
+			{
+				return $usertypes;
+			}
+			else
+			{
+				JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_KUNENA_USERTYPES_XML_FILE_CANNOT_BE_OPENED', 'adminsitrator/components/com_kunena/models/usertypes.xml'), 'error');
+			}
+		}
+		else
+		{
+			JFactory::getApplication()->enqueueMessage(JText::sprintf('COM_KUNENA_USERTYPES_XML_FILE_NOT_AVAILABLE', 'adminsitrator/components/com_kunena/models/usertypes.xml'), 'error');
+		}
+	}
+
+	/**
 	 * Returns the global KunenaUser object, only creating it if it doesn't already exist.
 	 *
 	 * @param   mixed $identifier	The user to load - Can be an integer or string - If string, it is converted to ID automatically.
