@@ -137,7 +137,7 @@ abstract class KunenaForumTopicUserHelper
 
 		$db    = JFactory::getDbo();
 		$query = $db->getQuery(true);
-		$query->select('topic_id, user_id')
+		$query->select($db->quoteName(array('topic_id', 'user_id')))
 			->from($db->quoteName('#__kunena_user_topics'))
 			->where("topic_id IN ({$idlist})")
 			->where('posts>0');
@@ -148,7 +148,7 @@ abstract class KunenaForumTopicUserHelper
 
 		try
 		{
-			$results = (array) $db->loadRowList();
+			$results = (array) $db->loadObjectList();
 		}
 		catch (JDatabaseExceptionExecuting $e)
 		{

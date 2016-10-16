@@ -68,26 +68,45 @@ jQuery(document).ready(function ($) {
 			item = '.qreply';
 		}
 
-		if (item != undefined) {
-			$(item).atwho({
-				at: ":",
-				displayTpl: "<li data-value='${key}'>${name} <img src='${url}' height='20' width='20' /></li>",
-				insertTpl: ':${name}:',
-				callbacks: {
-					remoteFilter: function (query, callback) {
-						if (query.length > 0) {
-							$.ajax({
-								url: $("#kurl_emojis").val(),
-								data: {
-									search: query
-								},
-								success: function (data) {
-									callback(data.emojis);
-								}
-							});
+		if ( item!=undefined ) {
+			jQuery(item)
+				.atwho({
+					at: ":",
+					tpl:"<li data-value='${key}'>${name} <img src='${url}' height='20' width='20' /></li>",
+					callbacks: {
+						remote_filter: function(query, callback) {
+							if(query.length > 0) {
+								jQuery.ajax({
+									url: jQuery( "#kurl_emojis" ).val(),
+									data: {
+										search : query
+									},
+									success: function(data) {
+										callback(data.emojis);
+									}
+								});
+							}
 						}
 					}
-				}
+				})
+				.atwho({
+					at: "@",
+					tpl:"<li data-value='${key}'>${name} <img src='${url}' height='20' width='20' /></li>",
+					callbacks: {
+						remote_filter: function(query, callback) {
+							if(query.length > 0) {
+								jQuery.ajax({
+									url: jQuery( "#kurl_mentions" ).val(),
+									data: {
+										search : query
+									},
+									done: function(data) {
+										callback(data.users);
+									}
+								});
+							}
+						}
+					}
 			});
 		}
 	}

@@ -89,7 +89,43 @@ class KunenaViewTopic extends KunenaView
 
 		echo json_encode($response);
 	}
+	
+	/**
+	 * Return JSON results of users which can add mention
+	 *
+	 * @since 5.1
+	 *
+	 * @return JSON
+	*/
+	public function displayUserMentions()
+	{
+		$response = array();
 
+		$topic_id = $this->app->input->get('topic_id', 0 ,'int');
+		$search = $this->app->input->get('search');
+
+		$finder = new KunenaUserFinder;
+		$finder
+			->filterByName($search);
+
+		$users = $finder->find();
+
+		foreach($users as $user)
+		{
+			$tu['key'] = '[mention userid=' . $user->userid . ']' . $user->username. '[/mention]';
+			$tu['userid'] = $user->userid;
+			$tu['username'] = $user->username;
+			$tu['avatar'] = $user->getAvatarImage('kavatar', 24, 24);
+			$response['users'][] = $tu;
+		}
+
+		// Set the MIME type and header for JSON output.
+		$this->document->setMimeEncoding('application/json');
+		JResponse::setHeader('Content-Disposition', 'attachment; filename="' . $this->getName() . '.' . $this->getLayout() . '.json"');
+
+		echo json_encode($response);
+	}
+	
 	/**
 	 * Send list of topic icons in JSON for the category set selected
 	 *

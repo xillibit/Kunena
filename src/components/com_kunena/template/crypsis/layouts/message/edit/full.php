@@ -167,6 +167,8 @@ $editor   = $template->params->get('editor');
 		</div>
 		<input type="hidden" id="kurl_emojis" name="kurl_emojis"
 		       value="<?php echo KunenaRoute::_('index.php?option=com_kunena&view=topic&layout=listemoji&format=raw') ?>"/>
+		<?php if ( !empty($this->message->thread) ): ?>
++		<input type="hidden" id="kurl_mentions" name="kurl_mentions" value="<?php echo KunenaRoute::_('index.php?option=com_kunena&view=topic&layout=usermentions&topic_id='.$this->message->thread.'&format=raw') ?>" />
 		<input type="hidden" id="kemojis_allowed" name="kemojis_allowed" value="<?php echo $config->disemoticons ? 0 : 1 ?>"/>
 	</form>
 </div>
