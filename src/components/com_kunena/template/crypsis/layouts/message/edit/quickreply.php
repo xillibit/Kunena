@@ -101,7 +101,7 @@ $editor   = $template->params->get('editor');
 			<input type="hidden" name="task" value="post"/>
 			<input type="hidden" name="parentid" value="<?php echo $message->displayField('id'); ?>"/>
 			<input type="hidden" name="catid" value="<?php echo $category->displayField('id'); ?>"/>
-			<?php if (!$config->allow_change_subject) : ?>
+			<?php if (!$config->allow_change_subject && !$me->isModerator()) : ?>
 				<input type="hidden" name="subject" value="<?php echo $this->escape($this->message->subject); ?>"/>
 			<?php endif; ?>
 			<?php echo JHtml::_('form.token'); ?>
@@ -145,7 +145,7 @@ $editor   = $template->params->get('editor');
 					}
 					else
 					{
-						echo '<textarea class="span12 qreply" id="kbbcode-message" name="message" rows="6" cols="60" placeholder="' . JText::_('COM_KUNENA_ENTER_MESSAGE') .'"></textarea>';
+						echo '<textarea class="span12 qreply" id="kbbcode-message" name="message" rows="6" cols="60" placeholder="' . JText::_('COM_KUNENA_ENTER_MESSAGE') . '"></textarea>';
 					} ?>
 				</div>
 

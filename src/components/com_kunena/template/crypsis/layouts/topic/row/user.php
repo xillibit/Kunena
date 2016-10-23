@@ -102,7 +102,7 @@ if (!empty($this->spacing)) : ?>
 			<?php endif; ?>
 		</div>
 
-		<div class="hidden-phone">
+		<div class="started">
 			<?php echo JText::sprintf('COM_KUNENA_CATEGORY_X', $this->getCategoryLink($this->topic->getCategory())) ?>
 			<br/>
 			<?php echo $topic->getFirstPostTime()->toKunena('config_post_dateformat'); ?>
@@ -113,7 +113,7 @@ if (!empty($this->spacing)) : ?>
 				 * </span>    */ ?>
 				<?php if ($topic->locked != 0) : ?>
 					<span class="label label-important">
-						<?php echo KunenaIcons::lock(); ?> <?php echo JText::_('COM_KUNENA_LOCKED'); ?>
+						<?php echo KunenaIcons::lock(); ?><?php echo JText::_('COM_KUNENA_LOCKED'); ?>
 					</span>
 				<?php endif; ?>
 			</div>
@@ -130,7 +130,7 @@ if (!empty($this->spacing)) : ?>
 				 * </span>    */ ?>
 				<?php if ($topic->locked != 0) : ?>
 					<span class="label label-important">
-						<?php echo KunenaIcons::lock(); ?> <?php echo JText::_('COM_KUNENA_LOCKED'); ?>
+						<?php echo KunenaIcons::lock(); ?><?php echo JText::_('COM_KUNENA_LOCKED'); ?>
 					</span>
 				<?php endif; ?>
 			</div>

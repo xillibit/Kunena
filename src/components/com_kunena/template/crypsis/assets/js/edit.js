@@ -61,8 +61,8 @@ jQuery(document).ready(function ($) {
 	/* To enabled emojis in kunena textera feature like on github */
 	if ($('#kemojis_allowed').val() == 1) {
 		var item = '';
-		if ($('#kbbcode-message').length > 0 && $('.qreply').length == 0) {
-			item = '#kbbcode-message';
+		if ($('#editor').length > 0 && $('.qreply').length == 0) {
+			item = '#editor';
 		}
 		else if ($('.qreply').length > 0) {
 			item = '.qreply';
@@ -91,7 +91,7 @@ jQuery(document).ready(function ($) {
 				})
 				.atwho({
 					at: "@",
-					tpl:"<li data-value='${key}'>${name} <img src='${url}' height='20' width='20' /></li>",
+					tpl:"<li data-value='${key}'>${username} <img src='${avatar}' height='20' width='20' /></li>",
 					callbacks: {
 						remote_filter: function(query, callback) {
 							if(query.length > 0) {

@@ -171,6 +171,42 @@ abstract class KunenaHtmlParser
 		{
 			return;
 		}
+		else
+		{
+			$txt = preg_replace('/\[confidential\](.*?)\[\/confidential\]/s', '', $txt);
+			$txt = preg_replace('/\[color(.*?)\](.*?)\[\/color\]/s', '', $txt);
+			$txt = preg_replace('/\[hide\](.*?)\[\/hide\]/s', '', $txt);
+			$txt = preg_replace('/\[spoiler\](.*?)\[\/spoiler\]/s', '', $txt);
+			$txt = preg_replace('/\[code(.*?)\](.*?)\[\/code]/s', '', $txt);
+			$txt = preg_replace('/\[attachment(.*?)\](.*?)\[\/attachment]/s', '', $txt);
+			$txt = preg_replace('/\[attachment]/s', '', $txt);
+			$txt = preg_replace('/\[article\](.*?)\[\/article]/s', '', $txt);
+			$txt = preg_replace('/\[video(.*?)\](.*?)\[\/video]/s', '', $txt);
+			$txt = preg_replace('/\[img(.*?)\](.*?)\[\/img]/s', '', $txt);
+			$txt = preg_replace('/\[image]/s', '', $txt);
+			$txt = preg_replace('/\[url(.*?)\](.*?)\[\/url]/s', '', $txt);
+			$txt = preg_replace('/\[quote(.*?)\](.*?)\[\/quote]/s', '', $txt);
+			$txt = preg_replace('/\[spoiler(.*?)\](.*?)\[\/spoiler]/s', '', $txt);
+			$txt = preg_replace('/\[tweet(.*?)\](.*?)\[\/tweet]/s', '', $txt);
+			$txt = preg_replace('/\[instagram(.*?)\](.*?)\[\/instagram]/s', '', $txt);
+			$txt = preg_replace('/\[soundcloud(.*?)\](.*?)\[\/soundcloud]/s', '', $txt);
+		}
+
+		if (JPluginHelper::isEnabled('content', 'emailcloak'))
+		{
+			$plugin = JPluginHelper::getPlugin('content', 'emailcloak');
+			$params = new JRegistry($plugin->params);
+
+			if ($params->get('mode', 1))
+			{
+				$res = substr($txt, 0, 200);
+
+				if (preg_match('/([\S]+@[\w]+(?:\.[\w]+)+)/i', $res))
+				{
+					return $txt;
+				}
+			}
+		}
 
 		$bbcode = KunenaBbcode::getInstance(self::$relative);
 		$bbcode->SetLimit($len);

@@ -110,8 +110,8 @@ $this->addScript('assets/js/search.js');
 						<div id="searchatdate">
 							<div class="input-append date">
 								<input type="text" name="searchatdate" data-date-format="mm/dd/yyyy"
-								       value="<?php echo JFactory::getDate()->format('m/d/Y'); ?>">
-								<span class="input-group-addon"><?php echo KunenaIcons::calendar();?></span>
+								       value="">
+								<span class="input-group-addon"><?php echo KunenaIcons::calendar(); ?></span>
 							</div>
 						</div>
 					</fieldset>

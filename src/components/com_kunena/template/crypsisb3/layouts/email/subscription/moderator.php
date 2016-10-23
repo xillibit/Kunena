@@ -5,7 +5,7 @@
  * @package         Kunena.Template.Crypsis
  * @subpackage      Layout.Email
  *
- * @copyright       Copyright (C) 2008 - 2016 Kunena Team. All rights reserved.
+ * @copyright   (C) 2008 - 2016 Kunena Team. All rights reserved.
  * @license         http://www.gnu.org/copyleft/gpl.html GNU/GPL
  * @link            https://www.kunena.org
  **/
@@ -138,18 +138,22 @@ $more = ($this->once ?
 							<?php echo $msg1 . " " . $config->board_title; ?>
 						</td>
 					</tr>
-					<tr>
-						<td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 20px 0 0;"
-						    class="hero"><a target="_blank" style="text-decoration: none;"
-						                    href="#"><img border="0" vspace="0" hspace="0"
-						                                  src="<?php echo JUri::base() . KunenaConfig::getInstance()->emailheader; ?>"
-						                                  alt="Please enable images to view this content" title="Forum"
-						                                  width="560" style="
+
+					<?php if (!empty($config->emailheader)) : ?>
+						<tr>
+							<td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 20px 0 0;"
+							    class="hero"><a target="_blank" style="text-decoration: none;"
+							                    href="#"><img border="0" vspace="0" hspace="0"
+							                                  src="<?php echo JUri::base() . KunenaConfig::getInstance()->emailheader; ?>"
+							                                  alt="Please enable images to view this content" title="Forum"
+							                                  width="560" style="
 			width: 100%;
 			max-width: 560px;
 			color: #000000; font-size: 13px; margin: 0; padding: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border: none; display: block;"/></a>
-						</td>
-					</tr>
+							</td>
+						</tr>
+					<?php endif; ?>
+
 					<tr>
 						<td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; width: 87.5%; font-size: 17px;
 			padding: 25px 6.25% 0;color: #999999;font-family: sans-serif;text-align:left;" class="paragraph">

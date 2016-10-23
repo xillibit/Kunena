@@ -251,9 +251,11 @@ class KunenaModelSearch extends KunenaModel
 		}
 		else
 		{
-			$time = JFactory::getDate($this->getState('query.searchatdate'))->toUnix();
+			$time_start_day = JFactory::getDate($this->getState('query.searchatdate'))->toUnix();
+			$time_end_day   = new DateTime($this->getState('query.searchatdate'));
+			$time_end_day->add(new DateInterval("PT23H59M59S"));
 
-			$querystrings[] = "m.time = '{$time}'";
+			$querystrings[] = " m.time > {$time_start_day} AND m.time < {$time_end_day->getTimestamp()}";
 		}
 
 		$topic_id = $this->getState('query.topic_id');
@@ -448,7 +450,7 @@ class KunenaModelSearch extends KunenaModel
 		// Turn internal state into URL, but ignore default values
 		$defaults = array('titleonly' => 0, 'searchuser' => '', 'exactname' => 0, 'childforums' => 0, 'starteronly' => 0,
 		                  'replyless' => 0, 'replylimit' => 0, 'searchdate' => '365', 'beforeafter' => 'after', 'sortby' => 'lastpost',
-		                  'order'     => 'dec', 'catids' => '0', 'show' => '0', 'topic_id' => 0, 'ids' => 0);
+		                  'order'     => 'dec', 'catids' => '0', 'show' => '0', 'topic_id' => 0, 'ids' => 0, 'searchatdate' => '');
 
 		$url_params = '';
 		$state      = $this->getState();

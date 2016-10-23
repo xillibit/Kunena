@@ -34,7 +34,6 @@ JText::script('COM_KUNENA_EDITOR_POLL_SETTING');
 JText::script('COM_KUNENA_EDITOR_TWEET');
 
 JHtml::_('jquery.ui');
-$this->addScript('assets/js/jquery.fileupload-ui.js');
 $this->addScript('assets/js/load-image.min.js');
 $this->addScript('assets/js/canvas-to-blob.min.js');
 $this->addScript('assets/js/jquery.iframe-transport.js');
@@ -43,9 +42,10 @@ $this->addScript('assets/js/jquery.fileupload-process.js');
 $this->addScript('assets/js/jquery.fileupload-image.js');
 $this->addScript('assets/js/jquery.fileupload-audio.js');
 $this->addScript('assets/js/jquery.fileupload-video.js');
+$this->addScript('assets/js/jquery.fileupload-ui.js');
 $this->addScript('assets/js/upload.main.js');
 $this->addStyleSheet('assets/css/fileupload.css');
-$this->addStyleSheet('assets/css/fileupload-ui.css');
+$this->addStyleSheet('assets/css/jquery.fileupload-ui.css');
 
 $this->k = 0;
 
@@ -172,13 +172,15 @@ if (KunenaFactory::getTemplate()->params->get('formRecover'))
 							<label class="control-label"><?php echo JText::_('COM_KUNENA_GEN_SUBJECT'); ?></label>
 
 							<div class="controls">
-								<input class="span12" type="text" placeholder="<?php echo JText::_('COM_KUNENA_TOPIC_EDIT_PLACEHOLDER_SUBJECT') ?>"
-								       name="subject" id="subject"
-								       maxlength="<?php echo $this->escape($this->ktemplate->params->get('SubjectLengthMessage')); ?>" tabindex="6"
-								       <?php if (!$this->config->allow_change_subject && $this->message->parent) : ?>disabled<?php endif; ?>
-								       value="<?php echo $this->escape($this->message->subject); ?>"/>
-								<?php if (!$this->config->allow_change_subject && $this->topic->exists()): ?>
-									<input type="hidden" name="subject" value="<?php echo $this->escape($this->message->subject); ?>"/>
+								<?php if (!$this->config->allow_change_subject && $this->topic->exists() && !KunenaUserHelper::getMyself()->isModerator($this->message->getCategory())) : ?>
+									<input class="span12" type="text" name="subject" value="<?php echo $this->escape($this->message->subject); ?>"
+									       disabled/>
+								<?php else : ?>
+									<input class="span12" type="text"
+									       placeholder="<?php echo JText::_('COM_KUNENA_TOPIC_EDIT_PLACEHOLDER_SUBJECT') ?>" name="subject"
+									       id="subject"
+									       maxlength="<?php echo $this->escape($this->ktemplate->params->get('SubjectLengthMessage')); ?>"
+									       tabindex="6" value="<?php echo $this->escape($this->message->subject); ?>"/>
 								<?php endif; ?>
 							</div>
 						</div>
@@ -198,7 +200,7 @@ if (KunenaFactory::getTemplate()->params->get('formRecover'))
 													class="fa fa-<?php echo $icon->fa; ?> glyphicon-topic fa-2x"></i>
 												<?php else : ?>
 												<label class="radio inline" for="radio<?php echo $icon->id; ?>"><img
-														src="<?php echo $icon->relpath; ?>" alt="" border="0"/>
+														src="<?php echo $icon->relpath; ?>" alt="<?php echo $icon->name; ?>" border="0"/>
 													<?php endif; ?>
 												</label>
 												<?php endforeach; ?>
@@ -222,7 +224,7 @@ if (KunenaFactory::getTemplate()->params->get('formRecover'))
 
 								<div class="controls">
 									<input class="input-xxlarge" name="modified_reason" maxlength="200" type="text"
-									          value="<?php echo $this->message->modified_reason; ?>" title="reason"/>
+									       value="<?php echo $this->message->modified_reason; ?>" title="reason"/>
 								</div>
 							</div>
 						<?php endif; ?>

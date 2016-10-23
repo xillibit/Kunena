@@ -46,6 +46,7 @@ $list = array();
 		<?php echo KunenaIcons::clock(); ?>
 		<?php echo $message->getTime()->toSpan('config_post_dateformat', 'config_post_dateformat_hover'); ?>
 		<a href="#<?php echo $this->message->id; ?>" id="<?php echo $this->message->id; ?>" rel="canonical">#<?php echo $this->numLink; ?></a>
+		<span class="visible-phone"><?php echo JText::_('COM_KUNENA_BY') . ' ' . $message->getAuthor()->getLink(); ?></span>
 	</small>
 
 	<div
@@ -144,7 +145,7 @@ endif; ?>
 			if (!empty($this->thankyou_delete[$userid]))
 			{
 				$list[] = $thank . ' <a title="' . JText::_('COM_KUNENA_BUTTON_THANKYOU_REMOVE_LONG') . '" href="'
-					. $this->thankyou_delete[$userid] . '"><i class="icon-remove"></i></a>';
+					. $this->thankyou_delete[$userid] . '">' . KunenaIcons::delete() . '</a>';
 			}
 			else
 			{
