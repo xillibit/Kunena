@@ -69,15 +69,15 @@ jQuery(document).ready(function ($) {
 		}
 
 		if ( item!=undefined ) {
-			jQuery(item)
+			$(item)
 				.atwho({
 					at: ":",
 					tpl:"<li data-value='${key}'>${name} <img src='${url}' height='20' width='20' /></li>",
 					callbacks: {
-						remote_filter: function(query, callback) {
+						remotefilter: function(query, callback) {
 							if(query.length > 0) {
-								jQuery.ajax({
-									url: jQuery( "#kurl_emojis" ).val(),
+								$.ajax({
+									url: $( "#kurl_emojis" ).val(),
 									data: {
 										search : query
 									},
@@ -91,12 +91,12 @@ jQuery(document).ready(function ($) {
 				})
 				.atwho({
 					at: "@",
-					tpl:"<li data-value='${key}'>${username} <img src='${avatar}' height='20' width='20' /></li>",
+					displayTpl:"<li data-value='${key}'>${username} <img src='${avatar}' height='20' width='20' /></li>",
 					callbacks: {
-						remote_filter: function(query, callback) {
+						remotefilter: function(query, callback) {
 							if(query.length > 0) {
-								jQuery.ajax({
-									url: jQuery( "#kurl_mentions" ).val(),
+								$.ajax({
+									url: $( "#kurl_mentions" ).val(),
 									data: {
 										search : query
 									},
