@@ -11,9 +11,8 @@
 defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
 
-$this->addScript('jquery.wysibb.js');
-$this->addStyleSheet('wbbtheme.css');
-$this->addScript('wysibb.lang.js');
+$this->addScript('summernote-bs4.js');
+$this->addStyleSheet('summernote-bs4.css');
 echo $this->subLayout('Widget/Datepicker');
 $this->addScript('jquery.caret.js');
 $this->addScript('jquery.atwho.js');
@@ -89,12 +88,8 @@ $topictemplate    = !KunenaConfig::getInstance()->pickup_category;
 $settings         = $templatesettings->get('wysibb');
 ?>
 <script>
-	var wbbOpt = {
-		lang: "kunena",
-		buttons: "<?php echo $settings;?>"
-	};
-	jQuery(function ($) {
-		$("#editor").wysibb(wbbOpt);
+$(document).ready(function() {
+	  $('#editor').summernote();
 	});
 </script>
 

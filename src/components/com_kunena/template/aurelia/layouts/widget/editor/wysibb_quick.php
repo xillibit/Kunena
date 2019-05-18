@@ -12,12 +12,11 @@
 defined('_JEXEC') or die();
 use Joomla\CMS\Language\Text;
 
-$this->addScript('jquery.wysibb.js');
-$this->addStyleSheet('wbbtheme.css');
+$this->addScript('summernote-bs4.js');
+$this->addStyleSheet('summernote-bs4.css');
 $this->addScript('jquery.caret.js');
 $this->addScript('jquery.atwho.js');
 $this->addStyleSheet('jquery.atwho.css');
-$this->addScript('wysibb.lang.js');
 
 Text::script('COM_KUNENA_WYSIBB_EDITOR_BOLD');
 Text::script('COM_KUNENA_WYSIBB_EDITOR_ITALIC');
@@ -88,12 +87,8 @@ $templatesettings = $this->ktemplate->params;
 $settings         = $templatesettings->get('wysibb');
 ?>
 <script>
-	var wbbOpt = {
-		lang: "kunena",
-		buttons: "<?php echo $settings;?>"
-	};
-	jQuery(function ($) {
-		$('[id^=editor-]').wysibb(wbbOpt);
+$(document).ready(function() {
+	  $('[id^=editor-]').summernote();
 	});
 </script>
 
