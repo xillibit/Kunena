@@ -320,7 +320,7 @@ if (KunenaFactory::getTemplate()->params->get('formRecover'))
 
 			<?php if ($editor == 1)
 			{
-				echo $this->subLayout('Widget/Editor')->setLayout('wysibb')->set('message', $this->message)->set('config', $this->config);
+				echo $this->subLayout('Widget/Editor')->setLayout('wysiwyg')->set('message', $this->message)->set('config', $this->config);
 			}
 			else
 			{

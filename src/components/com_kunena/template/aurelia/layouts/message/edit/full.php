@@ -124,7 +124,7 @@ if ($me->canDoCaptcha() && KunenaConfig::getInstance()->quickreply)
 				</label>
 				<?php if ($editor == 1)
 				{
-					echo $this->subLayout('Widget/Editor')->setLayout('wysibb_quick')->set('message', $this->message)->set('config', $config);
+					echo $this->subLayout('Widget/Editor')->setLayout('wysiwyg_quick')->set('message', $this->message)->set('config', $config);
 				}
 				else
 				{

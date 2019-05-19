@@ -95,10 +95,6 @@ jQuery(document).ready(function ($) {
 			item = '.qreply';
 		}
 
-		if ($('#wysibb-body').length > 0) {
-			item = '#wysibb-body';
-		}
-
 		if (item != undefined) {
 			$(item).atwho({
 				at: ":",
