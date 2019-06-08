@@ -26,15 +26,16 @@ class Com_KunenaInstallerScript
 	 */
 	protected $versions = array(
 		'PHP'     => array(
-			'8.0' => '8.0.0',
 			'7.4' => '7.4.0',
 			'7.3' => '7.3.0',
 			'7.2' => '7.2.0',
-			'0'   => '7.3.9', // Preferred version
+			'7.1' => '7.1.0',
+			'0'   => '7.2.18', // Preferred version
 		),
 		'MySQL'   => array(
 			'8.0' => '8.0',
 			'5.7' => '5.7',
+			'5.6' => '5.6',
 			'0'   => '5.7' // Preferred version
 		),
 		'Joomla!' => array(
@@ -268,7 +269,7 @@ class Com_KunenaInstallerScript
 
 			$db    = Factory::getDBO();
 			$query = "UPDATE `#__kunena_categories` SET iconset='default' WHERE iconset='system'";
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 			$db->execute();
 		}
 
@@ -490,7 +491,7 @@ class Com_KunenaInstallerScript
 		// Get installed Kunena version
 		$query = $db->getQuery(true)
 			->select($db->quoteName('version'))
-			->from($db->quoteName($db->quoteName($table)))
+			->from($db->quoteName($table))
 			->order($db->quoteName('id') . ' DESC');
 		$db->setQuery($query,0, 1);
 		$installed = $db->loadResult();

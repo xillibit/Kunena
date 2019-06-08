@@ -54,6 +54,7 @@ use Joomla\CMS\Uri\Uri;
  * @property string $params
  * @property string $topictemplate
  * @property string $sectionheaderdesc
+ * @property int    $allow_ratings
  */
 class KunenaForumCategory extends KunenaDatabaseObject
 {
@@ -172,7 +173,7 @@ class KunenaForumCategory extends KunenaDatabaseObject
 	 * @var integer
 	 * @since Kunena
 	 */
-	protected $_new = 0;
+	protected $_new = null;
 
 	/**
 	 * @var string
@@ -291,6 +292,11 @@ class KunenaForumCategory extends KunenaDatabaseObject
 		$usercategory             = KunenaForumCategoryUserHelper::get($this->id, $user);
 		$usercategory->subscribed = (int) $value;
 
+		if (!$usercategory->params)
+		{
+			$usercategory->params = '';
+		}
+
 		try
 		{
 			$usercategory->save();
@@ -300,7 +306,7 @@ class KunenaForumCategory extends KunenaDatabaseObject
 			KunenaError::displayDatabaseError($e);
 		}
 
-		return;
+		return true;
 	}
 
 	/**
@@ -469,6 +475,31 @@ class KunenaForumCategory extends KunenaDatabaseObject
 		KUNENA_PROFILER ? KunenaProfiler::instance()->stop('function ' . __CLASS__ . '::' . __FUNCTION__ . '()') : null;
 
 		return $this->_channels[$action];
+	}
+
+	/**
+	 * Returns true if user is authorised to do the action.
+	 *
+	 * @param   string      $action  action
+	 * @param   KunenaUser  $user    user
+	 *
+	 * @return boolean
+	 *
+	 * @since  K4.0
+	 * @throws null
+	 */
+	public function isAuthorised($action = 'read', KunenaUser $user = null)
+	{
+		if (KunenaFactory::getConfig()->read_only)
+		{
+			// Special case to ignore authorisation.
+			if ($action != 'read')
+			{
+				return false;
+			}
+		}
+
+		return !$this->tryAuthorise($action, $user, false);
 	}
 
 	/**
@@ -731,12 +762,12 @@ class KunenaForumCategory extends KunenaDatabaseObject
 		if (!isset($this->_aliases))
 		{
 			$db    = Factory::getDbo();
-			$query  = $db->getQuery(true);
+			$query = $db->getQuery(true);
 			$query->select('*')
 				->from($db->quoteName('#__kunena_aliases'))
-				->where($db->quoteName('type') . ' = ' . $db->quote('catid') . ' AND' .
-					$db->quoteName('item') . ' = ' . $db->quote($this->id));
-			$db->setQuery((string) $query);
+				->where($db->quoteName('type') . ' = ' . $db->quote('catid'))
+				->andWhere($db->quoteName('item') . ' = ' . $db->quote($this->id));
+			$db->setQuery($query);
 			$this->_aliases = (array) $db->loadObjectList('alias');
 		}
 
@@ -759,13 +790,13 @@ class KunenaForumCategory extends KunenaDatabaseObject
 		}
 
 		$db    = Factory::getDbo();
-		$query  = $db->getQuery(true);
+		$query = $db->getQuery(true);
 		$query->delete()
 			->from($db->quoteName('#__kunena_aliases'))
-			->where($db->quoteName('type') . ' = ' . $db->quote('catid') . ' AND' .
-				$db->quoteName('item') . ' = ' . $db->quote($this->id) . ' AND' . $db->quoteName('alias') .
-				' = ' . $db->quote($alias));
-		$db->setQuery((string) $query);
+			->where($db->quoteName('type') . ' = ' . $db->quote('catid'))
+			->andWhere($db->quoteName('item') . ' = ' . $db->quote($this->id))
+			->andWhere($db->quoteName('alias') . ' = ' . $db->quote($alias));
+		$db->setQuery($query);
 
 		try
 		{
@@ -815,8 +846,8 @@ class KunenaForumCategory extends KunenaDatabaseObject
 	}
 
 	/**
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	protected function buildInfo()
 	{
@@ -952,31 +983,6 @@ class KunenaForumCategory extends KunenaDatabaseObject
 	public function getParent()
 	{
 		return KunenaForumCategoryHelper::get(intval($this->parent_id));
-	}
-
-	/**
-	 * Returns true if user is authorised to do the action.
-	 *
-	 * @param   string      $action  action
-	 * @param   KunenaUser  $user    user
-	 *
-	 * @return boolean
-	 *
-	 * @since  K4.0
-	 * @throws null
-	 */
-	public function isAuthorised($action = 'read', KunenaUser $user = null)
-	{
-		if (KunenaFactory::getConfig()->read_only)
-		{
-			// Special case to ignore authorisation.
-			if ($action != 'read')
-			{
-				return false;
-			}
-		}
-
-		return !$this->tryAuthorise($action, $user, false);
 	}
 
 	/**
@@ -1160,6 +1166,7 @@ class KunenaForumCategory extends KunenaDatabaseObject
 	 *
 	 * @return boolean
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function load($id = null)
 	{
@@ -1281,10 +1288,10 @@ class KunenaForumCategory extends KunenaDatabaseObject
 		$where = isset($params['where']) ? (string) $params['where'] : '';
 
 		$db    = Factory::getDBO();
-		$query  = $db->getQuery(true);
+		$query = $db->getQuery(true);
 		$query->select($db->quoteName('id'))
 			->from($db->quoteName('#__kunena_topics', 'tt'))
-			->where('tt.category_id = ' . $db->quote($this->id) . $where)
+			->where('tt.category_id = ' . $this->id . ' ' . $where)
 			->order('tt.last_post_time ASC');
 		$db->setQuery($query, 0, $limit);
 
@@ -1333,10 +1340,10 @@ class KunenaForumCategory extends KunenaDatabaseObject
 		$where = isset($params['where']) ? (string) $params['where'] : '';
 
 		$db    = Factory::getDBO();
-		$query  = $db->getQuery(true);
+		$query = $db->getQuery(true);
 		$query->select($db->quoteName('id'))
 			->from($db->quoteName('#__kunena_topics', 'tt'))
-			->where('tt.category_id = ' . $db->quote($this->id) . ' AND tt.hold!=2 ' . $where)
+			->where('tt.category_id = ' . $this->id . ' AND tt.hold!=2 ' . $where)
 			->order('tt.last_post_time ASC');
 		$db->setQuery($query, 0, $limit);
 
@@ -1417,7 +1424,7 @@ class KunenaForumCategory extends KunenaDatabaseObject
 
 		foreach ($queries as $query)
 		{
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -1564,12 +1571,13 @@ class KunenaForumCategory extends KunenaDatabaseObject
 		{
 			// If last topic/post got moved or deleted, we need to find last post
 			$db    = Factory::getDBO();
-			$query  = $db->getQuery(true);
+			$query = $db->getQuery(true);
 			$query->select('*')
 				->from($db->quoteName('#__kunena_topics'))
-				->where($db->quoteName('category_id') . ' = ' . $db->quote($this->id) . ' AND' .
-					$db->quoteName('hold') . ' = 0' . ' AND' . $db->quoteName('moved_id') . ' = 0')
-			->order(array($db->quoteName('moved_id') . ' DESC', $db->quoteName('last_post_id') . ' DESC'));
+				->where($db->quoteName('category_id') . ' = ' . $db->quote($this->id))
+				->andWhere($db->quoteName('hold') . ' = 0')
+				->andWhere($db->quoteName('moved_id') . ' = 0')
+				->order(array($db->quoteName('moved_id') . ' DESC', $db->quoteName('last_post_id') . ' DESC'));
 			$db->setQuery($query, 0, 1);
 
 			try
@@ -1635,6 +1643,68 @@ class KunenaForumCategory extends KunenaDatabaseObject
 		$usercategory = KunenaForumCategoryUserHelper::get($this->id, $userid);
 
 		return (bool) $usercategory->subscribed;
+	}
+
+	/**
+	 * @param   int  $count  count
+	 *
+	 * @return integer
+	 *
+	 * @since Kunena 5.0.13
+	 */
+	public function totalCount($count)
+	{
+		if ($count)
+		{
+			if ($count > 1)
+			{
+				return Text::plural('COM_KUNENA_X_TOPICS_MORE', $this->formatLargeNumber($count));
+			}
+			else
+			{
+				return Text::plural('COM_KUNENA_X_TOPICS_1', $count);
+			}
+		}
+
+		return Text::_('COM_KUNENA_X_TOPICS_0');
+	}
+
+	/**
+	 * This function formats a number to n significant digits when above
+	 * 10,000. Starting at 10,0000 the out put changes to 10k, starting
+	 * at 1,000,000 the output switches to 1m. Both k and m are defined
+	 * in the language file. The significant digits are used to limit the
+	 * number of digits displayed when in 10k or 1m mode.
+	 *
+	 * @param   int  $number     Number to be formated
+	 * @param   int  $precision  Significant digits for output
+	 *
+	 * @return string
+	 * @since Kunena
+	 */
+	public function formatLargeNumber($number, $precision = 3)
+	{
+		// Do we need to reduce the number of significant digits?
+		if ($number >= 10000)
+		{
+			// Round the number to n significant digits
+			$number = round($number, -1 * (log10($number) + 1) + $precision);
+		}
+
+		if ($number < 10000)
+		{
+			$output = $number;
+		}
+		elseif ($number >= 1000000)
+		{
+			$output = $number / 1000000 . Text::_('COM_KUNENA_MILLION');
+		}
+		else
+		{
+			$output = $number / 1000 . Text::_('COM_KUNENA_THOUSAND');
+		}
+
+		return $output;
 	}
 
 	/**
@@ -1712,7 +1782,7 @@ class KunenaForumCategory extends KunenaDatabaseObject
 
 		$db    = Factory::getDbo();
 		$query = "REPLACE INTO #__kunena_aliases (alias, type, item) VALUES ({$db->quote($alias)},'catid',{$db->quote($this->id)})";
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -2040,67 +2110,5 @@ class KunenaForumCategory extends KunenaDatabaseObject
 		}
 
 		return;
-	}
-
-	/**
-	 * @param   int  $count  count
-	 *
-	 * @return integer
-	 *
-	 * @since Kunena 5.0.13
-	 */
-	public function totalCount($count)
-	{
-		if ($count)
-		{
-			if ($count > 1)
-			{
-				return Text::plural('COM_KUNENA_X_TOPICS_MORE', $this->formatLargeNumber($count));
-			}
-			else
-			{
-				return Text::plural('COM_KUNENA_X_TOPICS_1', $count);
-			}
-		}
-
-		return Text::_('COM_KUNENA_X_TOPICS_0');
-	}
-
-	/**
-	 * This function formats a number to n significant digits when above
-	 * 10,000. Starting at 10,0000 the out put changes to 10k, starting
-	 * at 1,000,000 the output switches to 1m. Both k and m are defined
-	 * in the language file. The significant digits are used to limit the
-	 * number of digits displayed when in 10k or 1m mode.
-	 *
-	 * @param   int  $number     Number to be formated
-	 * @param   int  $precision  Significant digits for output
-	 *
-	 * @return string
-	 * @since Kunena
-	 */
-	public function formatLargeNumber($number, $precision = 3)
-	{
-		// Do we need to reduce the number of significant digits?
-		if ($number >= 10000)
-		{
-			// Round the number to n significant digits
-			$number = round($number, -1 * (log10($number) + 1) + $precision);
-		}
-
-		if ($number < 10000)
-		{
-			$output = $number;
-		}
-		elseif ($number >= 1000000)
-		{
-			$output = $number / 1000000 . Text::_('COM_KUNENA_MILLION');
-		}
-		else
-		{
-			$output = $number / 1000 . Text::_('COM_KUNENA_THOUSAND');
-		}
-
-		return $output;
 	}
 }

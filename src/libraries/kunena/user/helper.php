@@ -226,10 +226,10 @@ abstract class KunenaUserHelper
 
 			$query = $db->getQuery(true);
 			$query->select('u.name, u.username, u.email, u.block AS blocked, u.registerDate, u.lastvisitDate, ku.*, u.id AS userid')
-				->from($db->quoteName('#__users') . 'AS u')
-				->leftJoin($db->quoteName('#__kunena_users') . ' AS ku ON u.id = ku.userid')
-				->where('u.id IN (' . $userlist . ')');
-			$db->setQuery((string) $query);
+				->from($db->quoteName('#__users', 'u'))
+				->leftJoin($db->quoteName('#__kunena_users') . ' AS ' . $db->quoteName('ku') . ' ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName('ku.userid'))
+				->where($db->quoteName('u.id') . ' IN (' . $userlist . ')');
+			$db->setQuery($query);
 
 			try
 			{
@@ -297,15 +297,15 @@ abstract class KunenaUserHelper
 
 			if ($config->userlist_count_users == '1')
 			{
-				$where = '(block=0 OR activation="")';
+			    $where = '(' . $db->quoteName('block') . ' = 0 OR activation="")';
 			}
 			elseif ($config->userlist_count_users == '2')
 			{
-				$where = '(block=0 AND activation="")';
+			    $where = '(' . $db->quoteName('block') . ' = 0 AND activation="")';
 			}
 			elseif ($config->userlist_count_users == '3')
 			{
-				$where = 'block=0';
+				$where = $db->quoteName('block') . ' = 0';
 			}
 			else
 			{
@@ -316,7 +316,7 @@ abstract class KunenaUserHelper
 			$query->select('COUNT(*), MAX(id)')
 				->from($db->quoteName('#__users'))
 				->where($where);
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -349,13 +349,13 @@ abstract class KunenaUserHelper
 			$query->select($db->quoteName(array('u.id', 'ku.posts'), array(null, 'count')));
 			$query->from($db->quoteName(array('#__kunena_users'), array('ku')));
 			$query->innerJoin($db->quoteName('#__users', 'u') . ' ON ' . $db->quoteName('u.id') . ' = ' . $db->quoteName('ku.userid'));
-			$query->where($db->quoteName('ku.posts') . '>0');
+			$query->where($db->quoteName('ku.posts') . ' > 0');
 			$query->order($db->quoteName('ku.posts') . ' DESC');
 
 			if (KunenaFactory::getConfig()->superadmin_userlist)
 			{
 				$filter = Joomla\CMS\Access\Access::getUsersByGroup(8);
-				$query->where('u.id NOT IN (' . implode(',', $filter) . ')');
+				$query->where($db->quote('u.id') . ' NOT IN (' . implode(',', $filter) . ')');
 			}
 
 			$db->setQuery($query, 0, $limit);
@@ -399,31 +399,31 @@ abstract class KunenaUserHelper
 			return array();
 		}
 
-		$recurs = $recursive ? '>=' : '=';
+		$recurs = $recursive ? ' >= ' : ' = ';
 
 		// Find users and their groups.
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true)
-			->select('m.*')
-			->from('#__usergroups AS ug1')
-			->join('INNER', '#__usergroups AS ug2 ON ug2.lft' . $recurs . 'ug1.lft AND ug1.rgt' . $recurs . 'ug2.rgt')
-			->join('INNER', '#__user_usergroup_map AS m ON ug2.id=m.group_id');
+			->select($db->quoteName('m.*'))
+			->from($db->quoteName( '#__usergroups',  'ug1'))
+			->innerJoin($db->quoteName( '#__usergroups','ug2') . ' ON ' . $db->quoteName('ug2.lft') .  $recurs . $db->quoteName('ug1.lft') . ' AND ' . $db->quoteName('ug1.rgt') . $recurs . $db->quoteName('ug2.rgt'))
+			->innerJoin($db->quoteName( '#__user_usergroup_map','m') .' ON ' . $db->quoteName('ug2.id') . ' = ' . $db->quoteName('m.group_id'));
 
 		if ($groupIds)
 		{
 			$groupIds  = ArrayHelper::toInteger($groupIds);
 			$groupList = implode(',', $groupIds);
-			$query->where("ug1.id IN ({$groupList})");
+			$query->where($db->quoteName('ug1.id') . ' IN (' . $groupList . ')');
 		}
 
 		if ($userIds)
 		{
 			$userIds  = ArrayHelper::toInteger($userIds);
 			$userList = implode(',', $userIds);
-			$query->where("user_id IN ({$userList})");
+			$query->where($db->quoteName('user_id') . ' IN (' . $userList . ')');
 		}
 
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 		$results = (array) $db->loadObjectList();
 		$list    = array();
 
@@ -464,23 +464,23 @@ abstract class KunenaUserHelper
 			$query  = $db->getQuery(true);
 			$query->select('COUNT(*)')
 				->from($db->quoteName('#__session'))
-				->where($db->quoteName('client_id') . '=0')
-				->andWhere($db->quoteName('userid') . '=0');
+				->where($db->quoteName('client_id') . ' = 0')
+				->where($db->quoteName('userid') . ' = 0');
 
 			if ($config->show_session_type == 2 && $config->show_session_starttime != 0)
 			{
 				// Calculate x minutes by using Kunena setting.
 				$time = Factory::getDate()->toUnix() - $config->show_session_starttime;
-				$query->where('time > ' . $time);
+				$query->where($db->quoteName('time') . ' > ' . $db->quote($time));
 			}
 			elseif ($config->show_session_type > 0)
 			{
 				// Calculate Joomla session expiration point.
 				$time = Factory::getDate()->toUnix() - ($app->get('lifetime', 15) * 60);
-				$query->where('time > ' . $time);
+				$query->where($db->quoteName('time') . ' > ' . $db->quote($time));
 			}
 
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -516,25 +516,25 @@ abstract class KunenaUserHelper
 			$query  = $db->getQuery(true);
 			$query->select('userid, MAX(time) AS time')
 				->from($db->quoteName('#__session'))
-				->where($db->quoteName('client_id') . '=0')
-				->andWhere($db->quoteName('userid') . '>0')
+				->where($db->quoteName('client_id') . ' = 0')
+				->where($db->quoteName('userid') . ' > 0')
 				->group($db->quoteName('userid'))
-				->order('time DESC');
+				->order($db->quoteName('time') . ' DESC');
 
 			if ($config->show_session_type == 2 && $config->show_session_starttime != 0)
 			{
 				// Calculate x minutes by using Kunena setting.
 				$time = Factory::getDate()->toUnix() - $config->show_session_starttime;
-				$query->where('time > ' . $time);
+				$query->where($db->quoteName('time') . ' > ' . $db->quote($time));
 			}
 			elseif ($config->show_session_type > 0)
 			{
 				// Calculate Joomla session expiration point.
 				$time = Factory::getDate()->toUnix() - ($app->get('lifetime', 15) * 60);
-				$query->where('time > ' . $time);
+				$query->where($db->quoteName('time') . ' > ' . $db->quote($time));
 			}
 
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -545,7 +545,7 @@ abstract class KunenaUserHelper
 				KunenaError::displayDatabaseError($e);
 			}
 		}
-
+		
 		return self::$_online;
 	}
 
@@ -590,7 +590,7 @@ abstract class KunenaUserHelper
 		{
 			return 1;
 		}
-
+		
 		return $user->status;
 	}
 
@@ -619,7 +619,7 @@ abstract class KunenaUserHelper
 				FROM #__kunena_user_topics
 				GROUP BY user_id
 			ON DUPLICATE KEY UPDATE posts=VALUES(posts)";
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -653,7 +653,7 @@ abstract class KunenaUserHelper
 				SELECT userid, MAX(expiration) AS banned FROM #__kunena_users_banned GROUP BY userid
 			) AS b ON u.userid=b.userid
 			SET u.banned=b.banned";
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -684,10 +684,10 @@ abstract class KunenaUserHelper
 		// If user has no user_topics, set posts into 0
 		$query  = $db->getQuery(true);
 		$query->update($db->quoteName('#__kunena_users', 'u'))
-			->leftJoin($db->quoteName('kunena_user_topics', 'ut') . 'ON ut.user_id=u.userid')
-			->set('u.posts = 0')
-			->where('ut.user_id IS NULL');
-		$db->setQuery((string) $query);
+			->leftJoin($db->quoteName('#__kunena_user_topics', 'ut') . ' ON ' . $db->quoteName('ut.user_id') . ' = ' . $db->quoteName('u.userid'))
+			->set($db->quoteName('u.posts') . ' = 0')
+			->where($db->quoteName('ut.user_id') . ' IS NULL');
+		$db->setQuery($query);
 
 		try
 		{

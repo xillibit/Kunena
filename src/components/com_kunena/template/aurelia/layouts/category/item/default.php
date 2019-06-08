@@ -16,7 +16,7 @@ use Joomla\CMS\Language\Text;
 
 $categoryActions = $this->getCategoryActions();
 $cols            = empty($this->checkbox) ? 5 : 6;
-$this->addStyleSheet('assets/css/rating.css');
+$this->addStyleSheet('rating.css');
 ?>
 
 <?php if ($this->category->headerdesc) : ?>
@@ -71,11 +71,13 @@ $this->addStyleSheet('assets/css/rating.css');
 					</a>
 				</th>
 				<th scope="col" class="hidden-xs-down"><?php echo Text::_('COM_KUNENA_GEN_SUBJECT'); ?></th>
-				<th scope="col" class="hidden-xs-down"><?php echo Text::_('COM_KUNENA_GEN_REPLIES'); ?> / <?php echo Text::_('COM_KUNENA_GEN_HITS'); ?></th>
+				<th scope="col" class="hidden-xs-down"><?php echo Text::_('COM_KUNENA_GEN_REPLIES'); ?>
+					/ <?php echo Text::_('COM_KUNENA_GEN_HITS'); ?></th>
 				<th scope="col" class="hidden-xs-down"><?php echo Text::_('COM_KUNENA_GEN_LAST_POST'); ?></th>
 
 				<?php if (!empty($this->topicActions)) : ?>
-					<th scope="col" class="center"><input class="kcheckall" type="checkbox" name="toggle" value=""/></th>
+					<th scope="col" class="center"><input class="kcheckall" type="checkbox" name="toggle" value=""/>
+					</th>
 				<?php endif; ?>
 			</tr>
 			</thead>
@@ -131,7 +133,7 @@ $this->addStyleSheet('assets/css/rating.css');
 												'kchecktarget'
 											);
 											?>
-											<button class="btn btn-default border" name="kcheckgo"
+											<button class="btn btn-outline-primary border" name="kcheckgo"
 											        type="submit"><?php echo Text::_('COM_KUNENA_GO') ?></button>
 										<?php endif; ?>
 									<?php endif; ?>

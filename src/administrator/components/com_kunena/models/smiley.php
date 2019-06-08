@@ -26,8 +26,8 @@ class KunenaAdminModelSmiley extends KunenaModel
 {
 	/**
 	 * @return  mixed
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getSmileyspaths()
 	{
@@ -63,7 +63,7 @@ class KunenaAdminModelSmiley extends KunenaModel
 			$smiley_list[] = HTMLHelper::_('select.option', $path, $file);
 		}
 
-		$list = HTMLHelper::_('select.genericlist', $smiley_list, 'smiley_url', 'class="inputbox" onchange="update_smiley(this.options[selectedIndex].value);" onmousemove="update_smiley(this.options[selectedIndex].value);"', 'value', 'text', !empty($selected->location) ? $smiley_images[$selected->location] : '');
+		$list = HTMLHelper::_('select.genericlist', $smiley_list, 'smiley_url', 'class="inputbox form-control" onchange="update_smiley(this.options[selectedIndex].value);" onmousemove="update_smiley(this.options[selectedIndex].value);"', 'value', 'text', !empty($selected->location) ? $smiley_images[$selected->location] : '');
 
 		return $list;
 	}
@@ -71,8 +71,8 @@ class KunenaAdminModelSmiley extends KunenaModel
 	/**
 	 * @return  mixed|void
 	 *
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getSmiley()
 	{
@@ -86,7 +86,7 @@ class KunenaAdminModelSmiley extends KunenaModel
 			$query->select('*')
 				->from($db->quoteName('#__kunena_smileys'))
 				->where('id=' . $db->quote($id));
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{

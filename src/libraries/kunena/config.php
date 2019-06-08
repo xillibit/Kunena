@@ -1335,9 +1335,15 @@ class KunenaConfig extends CMSObject
 
 	/**
 	 * @var    integer  Auto embed instagram; select, boolean
-	 * @since  1.0.5
+	 * @since  5.1.5
 	 */
 	public $autoembedinstagram = 1;
+
+	/**
+	 * @var    integer  Auto embed instagram; select, boolean
+	 * @since  1.0.5
+	 */
+	public $utm_source = 0;
 
 	/**
 	 * @since Kunena
@@ -1384,10 +1390,10 @@ class KunenaConfig extends CMSObject
 	{
 		$db    = Factory::getDBO();
 		$query = $db->getQuery(true);
-		$query->select('*');
-		$query->from($db->quoteName('#__kunena_configuration'));
-		$query->where($db->quoteName('id') . '=1');
-		$db->setQuery((string) $query);
+		$query->select('*')
+			->from($db->quoteName('#__kunena_configuration'))
+			->where($db->quoteName('id') . ' = 1');
+		$db->setQuery($query);
 
 		try
 		{

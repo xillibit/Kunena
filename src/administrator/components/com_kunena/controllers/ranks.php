@@ -33,10 +33,10 @@ class KunenaAdminControllerRanks extends KunenaController
 	/**
 	 * Construct
 	 *
-	 * @param   array $config config
+	 * @param   array  $config  config
 	 *
-	 * @throws Exception
 	 * @since    2.0
+	 * @throws Exception
 	 */
 	public function __construct($config = array())
 	{
@@ -49,8 +49,8 @@ class KunenaAdminControllerRanks extends KunenaController
 	 *
 	 * @return void
 	 *
-	 * @throws Exception
 	 * @since    2.0
+	 * @throws Exception
 	 * @throws null
 	 */
 	public function add()
@@ -71,9 +71,9 @@ class KunenaAdminControllerRanks extends KunenaController
 	 *
 	 * @return void
 	 *
+	 * @since    2.0
 	 * @throws Exception
 	 *
-	 * @since    2.0
 	 * @throws null
 	 */
 	public function edit()
@@ -111,8 +111,8 @@ class KunenaAdminControllerRanks extends KunenaController
 	 *
 	 * @since    2.0
 	 *
-	 * @throws Exception
 	 * @since    Kunena
+	 * @throws Exception
 	 * @throws null
 	 */
 	public function save()
@@ -135,11 +135,11 @@ class KunenaAdminControllerRanks extends KunenaController
 
 		if (!$rankid)
 		{
-			$query  = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->insert("{$db->quoteName('#__kunena_ranks')}")
 				->set("rank_title={$db->quote($rank_title)}, rank_image={$db->quote($rank_image)}, rank_special={$db->quote($rank_special)}, rank_min={$db->quote($rank_min)}");
 
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -154,12 +154,12 @@ class KunenaAdminControllerRanks extends KunenaController
 		}
 		else
 		{
-			$query  = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->update("{$db->quoteName('#__kunena_ranks')}")
 				->set("rank_title={$db->quote($rank_title)}, rank_image={$db->quote($rank_image)}, rank_special={$db->quote($rank_special)}, rank_min={$db->quote($rank_min)}")
 				->where("rank_id={$db->quote($rankid)}");
 
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -184,8 +184,8 @@ class KunenaAdminControllerRanks extends KunenaController
 	 *
 	 * @since    2.0
 	 *
-	 * @throws Exception
 	 * @since    Kunena
+	 * @throws Exception
 	 * @throws null
 	 */
 	public function rankupload()
@@ -222,8 +222,8 @@ class KunenaAdminControllerRanks extends KunenaController
 	 *
 	 * @since    2.0
 	 *
-	 * @throws Exception
 	 * @since    Kunena
+	 * @throws Exception
 	 * @throws null
 	 */
 	public function remove()
@@ -245,12 +245,12 @@ class KunenaAdminControllerRanks extends KunenaController
 
 		if ($cids)
 		{
-			$query  = $db->getQuery(true)
+			$query = $db->getQuery(true)
 				->delete()
 				->from("{$db->quoteName('#__kunena_ranks')}")
 				->where("rank_id IN ($cids)");
 
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -273,8 +273,8 @@ class KunenaAdminControllerRanks extends KunenaController
 	 *
 	 * @return void
 	 *
-	 * @throws Exception
 	 * @since K4.0
+	 * @throws Exception
 	 * @throws null
 	 */
 	public function cancel()

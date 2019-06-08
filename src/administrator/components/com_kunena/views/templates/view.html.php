@@ -87,7 +87,7 @@ class KunenaAdminViewTemplates extends KunenaView
 		$this->form         = $this->get('Form');
 		$this->params       = $this->get('editparams');
 		$this->details      = $this->get('templatedetails');
-		$this->templatename = $this->app->getUserState('kunena.edit.template');
+		$this->templatename = $this->app->getUserState('kunena.edit.templatename');
 		$template           = KunenaTemplate::getInstance($this->templatename);
 		$template->initializeBackend();
 
@@ -207,6 +207,11 @@ class KunenaAdminViewTemplates extends KunenaView
 
 		if (!file_exists($file))
 		{
+			if (!Folder::exists(KPATH_SITE . '/template/' . $this->templatename . '/assets/css/'))
+			{
+				Folder::create(KPATH_SITE . '/template/' . $this->templatename . '/assets/css/');
+			}
+
 			$fp = fopen($file, "w");
 			fwrite($fp, "");
 			fclose($fp);

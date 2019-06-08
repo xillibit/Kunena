@@ -28,8 +28,7 @@ $user = Factory::getUser();
 		var order = table.options[table.selectedIndex].value;
 		if (order != '<?php echo $this->listOrdering; ?>') {
 			dirn = 'asc';
-		}
-		else {
+		} else {
 			dirn = direction.options[direction.selectedIndex].value;
 		}
 		Joomla.tableOrdering(order, dirn, '');
@@ -56,17 +55,17 @@ $user = Factory::getUser();
 						<div class="filter-search btn-group pull-left">
 							<label for="filter_search"
 							       class="element-invisible"><?php echo Text::_('COM_KUNENA_FIELD_LABEL_SEARCHIN'); ?></label>
-							<input type="text" name="filter_search" id="filter_search" class="filter"
+							<input type="text" name="filter_search" id="filter_search" class="filter form-control"
 							       placeholder="<?php echo Text::_('COM_KUNENA_CATEGORIES_FIELD_INPUT_SEARCHCATEGORIES'); ?>"
 							       value="<?php echo $this->filterSearch; ?>"
 							       title="<?php echo Text::_('COM_KUNENA_CATEGORIES_FIELD_INPUT_SEARCHCATEGORIES'); ?>"/>
 						</div>
 						<div class="btn-group pull-left">
-							<button class="btn tip" type="submit"
+							<button class="btn btn-outline-primary tip" type="submit"
 							        title="<?php echo Text::_('COM_KUNENA_SYS_BUTTON_FILTERSUBMIT'); ?>"><i
 										class="icon-search"></i> <?php echo Text::_('COM_KUNENA_SYS_BUTTON_FILTERSUBMIT') ?>
 							</button>
-							<button class="btn tip" type="button"
+							<button class="btn btn-outline-primary tip" type="button"
 							        title="<?php echo Text::_('COM_KUNENA_SYS_BUTTON_FILTERRESET'); ?>"
 							        onclick="jQuery('.filter').val('');jQuery('#adminForm').submit();"><i
 										class="icon-remove"></i> <?php echo Text::_('COM_KUNENA_SYS_BUTTON_FILTERRESET'); ?>
@@ -126,7 +125,8 @@ $user = Factory::getUser();
 							<td class="nowrap center">
 								<label for="filter_enabled"
 								       class="element-invisible"><?php echo Text::_('All'); ?></label>
-								<select name="filter_enabled" id="filter_enabled" class="select-filter filter"
+								<select name="filter_enabled" id="filter_enabled"
+								        class="select-filter filter form-control"
 								        onchange="Joomla.orderTable()">
 									<option value=""><?php echo Text::_('COM_KUNENA_FIELD_LABEL_ALL'); ?></option>
 									<?php echo HTMLHelper::_('select.options', $this->publishedOptions(), 'value', 'text', $this->filterEnabled, true); ?>
@@ -135,7 +135,8 @@ $user = Factory::getUser();
 							<td class="nowrap">
 								<label for="filter_name"
 								       class="element-invisible"><?php echo Text::_('COM_KUNENA_FIELD_LABEL_SEARCHIN'); ?></label>
-								<input class="input-block-level input-filter filter" type="text" name="filter_name"
+								<input class="input-block-level input-filter filter form-control" type="text"
+								       name="filter_name"
 								       id="filter_name"
 								       placeholder="<?php echo Text::_('COM_KUNENA_SYS_BUTTON_FILTERSUBMIT') ?>"
 								       value="<?php echo $this->filterName; ?>"
@@ -144,7 +145,8 @@ $user = Factory::getUser();
 							<td class="nowrap center">
 								<label for="filter_element"
 								       class="element-invisible"><?php echo Text::_('COM_KUNENA_FIELD_LABEL_SEARCHIN'); ?></label>
-								<input class="input-block-level input-filter filter" type="text" name="filter_element"
+								<input class="input-block-level input-filter filter form-control" type="text"
+								       name="filter_element"
 								       id="filter_element"
 								       placeholder="<?php echo Text::_('COM_KUNENA_SYS_BUTTON_FILTERSUBMIT') ?>"
 								       value="<?php echo $this->filterElement; ?>"
@@ -153,7 +155,8 @@ $user = Factory::getUser();
 							<td class="nowrap center">
 								<label for="filter_access"
 								       class="element-invisible"><?php echo Text::_('All'); ?></label>
-								<select name="filter_access" id="filter_access" class="select-filter filter"
+								<select name="filter_access" id="filter_access"
+								        class="select-filter filter form-control"
 								        onchange="Joomla.orderTable()">
 									<option value=""><?php echo Text::_('COM_KUNENA_FIELD_LABEL_ALL'); ?></option>
 									<?php echo HTMLHelper::_('select.options', HTMLHelper::_('access.assetgroups'), 'value', 'text', $this->filterAccess, true); ?>
@@ -209,13 +212,13 @@ $user = Factory::getUser();
 													'closeButton' => false,
 													'backdrop'    => 'static',
 													'keyboard'    => false,
-													'footer'      => '<button type="button" class="btn btn-default" data-dismiss="modal" aria-hidden="true"'
+													'footer'      => '<button type="button" class="btn btn-outline-primary" data-dismiss="modal" aria-hidden="true"'
 														. ' onclick="jQuery(\'#plugin' . $item->extension_id . 'Modal iframe\').contents().find(\'#closeBtn\').click();">'
 														. Joomla\CMS\Language\Text::_('JLIB_HTML_BEHAVIOR_CLOSE') . '</button>'
-														. '<button type="button" class="btn btn-primary" data-dismiss="modal" aria-hidden="true"'
+														. '<button type="button" class="btn btn-outline-primary" data-dismiss="modal" aria-hidden="true"'
 														. ' onclick="jQuery(\'#plugin' . $item->extension_id . 'Modal iframe\').contents().find(\'#saveBtn\').click();">'
 														. Joomla\CMS\Language\Text::_("JSAVE") . '</button>'
-														. '<button type="button" class="btn btn-success" aria-hidden="true" onclick="jQuery(\'#plugin' . $item->extension_id
+														. '<button type="button" class="btn btn-outline-success" aria-hidden="true" onclick="jQuery(\'#plugin' . $item->extension_id
 														. 'Modal iframe\').contents().find(\'#applyBtn\').click(); return false;">'
 														. Joomla\CMS\Language\Text::_("JAPPLY") . '</button>',
 												)
@@ -244,7 +247,7 @@ $user = Factory::getUser();
 									<div class="card card-block bg-faded p-2 center filter-state">
 										<span><?php echo Text::_('COM_KUNENA_FILTERACTIVE'); ?>
 											<?php if ($this->filterActive || $this->pagination->total > 0) : ?>
-												<button class="btn btn-default" type="button"
+												<button class="btn btn-outline-primary" type="button"
 												        onclick="document.getElements('.filter').set('value', '');this.form.submit();"><?php echo Text::_('COM_KUNENA_FIELD_LABEL_FILTERCLEAR'); ?></button>
 											<?php endif; ?>
 										</span>

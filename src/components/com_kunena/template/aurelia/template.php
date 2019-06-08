@@ -99,7 +99,7 @@ class KunenaTemplateAurelia extends KunenaTemplate
 	 */
 	public function initialize()
 	{
-		JHtml::_('bootstrap.tooltip', '[data-toggle="tooltip"]');
+		JHtml::_('bootstrap.tooltip');
 
 		JHtml::_('bootstrap.renderModal');
 
@@ -137,8 +137,8 @@ class KunenaTemplateAurelia extends KunenaTemplate
 
 		if ($fontawesome)
 		{
-			$this->addScript('https://use.fontawesome.com/releases/v5.8.1/js/all.js', array(), array('defer' => true));
-			$this->addScript('https://use.fontawesome.com/releases/v5.8.1/js/v4-shims.js', array(), array('defer' => true));
+			$this->addScript('https://use.fontawesome.com/releases/v5.9.0/js/all.js', array(), array('defer' => true));
+			$this->addScript('https://use.fontawesome.com/releases/v5.9.0/js/v4-shims.js', array(), array('defer' => true));
 		}
 
 		$icons = $this->ktemplate->params->get('icons');

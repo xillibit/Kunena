@@ -100,7 +100,7 @@ abstract class KunenaForumMessageThankyouHelper
 		$query->select('*')
 			->from($db->quoteName('#__kunena_thankyou'))
 			->where('postid IN (' . $idlist . ')');
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -158,7 +158,7 @@ abstract class KunenaForumMessageThankyouHelper
 			$query .= " WHERE " . implode(" AND ", $where);
 		}
 
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -197,7 +197,7 @@ abstract class KunenaForumMessageThankyouHelper
 		$query->select('s.userid, count(s.' . $field . ') AS countid, u.username')
 			->from($db->quoteName('#__kunena_thankyou', 's'))
 			->innerJoin($db->quoteName('#__users', 'u'))
-			->where('s.' . $field .'=u.id')
+			->where('s.' . $field . ' = u.id')
 			->group('s.' . $field)
 			->order('countid DESC');
 		$db->setQuery($query, (int) $limitstart, (int) $limit);
@@ -232,9 +232,11 @@ abstract class KunenaForumMessageThankyouHelper
 		$query = $db->getQuery(true);
 		$query->select('s.postid, COUNT(*) AS countid, m.catid, m.thread, m.id, m.subject')
 			->from($db->quoteName('#__kunena_thankyou', 's'))
-			->innerJoin($db->quoteName('#__kunena_kunena_messages', 'm') . 'ON s.postid=m.id')
-			->innerJoin($db->quoteName('#__kunena_kunena_topics', 'tt') . 'ON m.thread=tt.id')
-			->where('m.catid IN (' . $catlist . ') AND m.hold=0 AND tt.hold=0')
+			->innerJoin($db->quoteName('#__kunena_kunena_messages', 'm') . ' ON s.postid = m.id')
+			->innerJoin($db->quoteName('#__kunena_kunena_topics', 'tt') . ' ON m.thread = tt.id')
+			->where('m.catid IN (' . $catlist . ')')
+			->andWhere('m.hold = 0')
+			->andWhere('tt.hold = 0')
 			->group('s.postid')
 			->order('countid DESC');
 		$db->setQuery($query, (int) $limitstart, (int) $limit);
@@ -278,9 +280,12 @@ abstract class KunenaForumMessageThankyouHelper
 		$query = $db->getQuery(true);
 		$query->select('m.catid, m.thread, m.id')
 			->from($db->quoteName('#__kunena_thankyou', 't'))
-			->innerJoin($db->quoteName('#__kunena_kunena_messages', 'm') . 'ON m.id=t.postid')
-			->innerJoin($db->quoteName('#__kunena_kunena_topics', 'tt') . 'ON m.thread=tt.id')
-			->where('m.catid IN (' . $catlist . ') AND m.hold=0 AND tt.hold=0 AND t.' . $field .'='. $db->quote(intval($userid)));
+			->innerJoin($db->quoteName('#__kunena_kunena_messages', 'm') . ' ON m.id = t.postid')
+			->innerJoin($db->quoteName('#__kunena_kunena_topics', 'tt') . ' ON m.thread = tt.id')
+			->where('m.catid IN (' . $catlist . ')')
+			->where('m.hold = 0')
+			->where('tt.hold = 0')
+			->where('t.' . $field . ' = ' . $db->quote(intval($userid)));
 		$db->setQuery($query, (int) $limitstart, (int) $limit);
 
 		try
@@ -310,10 +315,10 @@ abstract class KunenaForumMessageThankyouHelper
 		// Users who have no thank yous, set thankyou count to 0
 		$query = $db->getQuery(true);
 		$query->update($db->quoteName('#__kunena_users', 'u'))
-			->leftJoin($db->quoteName('#__kunena_thankyou', 't') . 'ON t.targetuserid = u.userid')
+			->leftJoin($db->quoteName('#__kunena_thankyou', 't') . ' ON t.targetuserid = u.userid')
 			->set('u.thankyou = 0')
 			->where('t.targetuserid IS NULL');
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -344,11 +349,16 @@ abstract class KunenaForumMessageThankyouHelper
 
 		// Update user thankyou count
 		$query = $db->getQuery(true);
-		$query->insert($db->quoteName('#__kunena_users') . '(userid, thankyou)')
-			->select('targetuserid AS userid, COUNT(*) AS thankyou')
-			->from($db->quoteName('#__kunena_thankyou'))
-			->group($db->quoteName('targetuserid') . 'ON DUPLICATE KEY UPDATE thankyou=VALUES(thankyou)');
-		$db->setQuery((string) $query);
+		$subquery = $db->getQuery(true);
+
+		$subquery->select('targetuserid AS userid, COUNT(*) AS thankyou')
+		->from($db->quoteName('#__kunena_thankyou'))
+		->group($db->quoteName('targetuserid'));
+
+		$query = "INSERT INTO #__kunena_users (userid, thankyou)" .
+		$subquery . "ON DUPLICATE KEY UPDATE thankyou=VALUES(thankyou)";
+
+		$db->setQuery($query);
 
 		try
 		{

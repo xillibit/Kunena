@@ -58,8 +58,8 @@ class KunenaAdminModelCategories extends KunenaModel
 
 	/**
 	 * @return array|boolean
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getAdminOptions()
 	{
@@ -122,28 +122,28 @@ class KunenaAdminModelCategories extends KunenaModel
 		$lists                     = array();
 		$lists ['accesstypes']     = KunenaAccess::getInstance()->getAccessTypesList($category);
 		$lists ['accesslists']     = KunenaAccess::getInstance()->getAccessOptions($category);
-		$lists ['categories']      = HTMLHelper::_('kunenaforum.categorylist', 'parent_id', 0, null, $cat_params, 'class="inputbox"', 'value', 'text', $category->parent_id);
-		$lists ['channels']        = HTMLHelper::_('kunenaforum.categorylist', 'channels[]', 0, $channels_options, $channels_params, 'class="inputbox" multiple="multiple"', 'value', 'text', explode(',', $category->channels));
+		$lists ['categories']      = HTMLHelper::_('kunenaforum.categorylist', 'parent_id', 0, null, $cat_params, 'class="inputbox form-control"', 'value', 'text', $category->parent_id);
+		$lists ['channels']        = HTMLHelper::_('kunenaforum.categorylist', 'channels[]', 0, $channels_options, $channels_params, 'class="inputbox form-control" multiple="multiple"', 'value', 'text', explode(',', $category->channels));
 		$lists ['aliases']         = $aliases ? HTMLHelper::_('kunenaforum.checklist', 'aliases', $aliases, true, 'category_aliases') : null;
-		$lists ['published']       = HTMLHelper::_('select.genericlist', $published, 'published', 'class="inputbox"', 'value', 'text', $category->published);
-		$lists ['forumLocked']     = HTMLHelper::_('select.genericlist', $yesno, 'locked', 'class="inputbox" size="1"', 'value', 'text', $category->locked);
-		$lists ['forumReview']     = HTMLHelper::_('select.genericlist', $yesno, 'review', 'class="inputbox" size="1"', 'value', 'text', $category->review);
-		$lists ['allow_polls']     = HTMLHelper::_('select.genericlist', $yesno, 'allow_polls', 'class="inputbox" size="1"', 'value', 'text', $category->allow_polls);
-		$lists ['allow_anonymous'] = HTMLHelper::_('select.genericlist', $yesno, 'allow_anonymous', 'class="inputbox" size="1"', 'value', 'text', $category->allow_anonymous);
-		$lists ['post_anonymous']  = HTMLHelper::_('select.genericlist', $post_anonymous, 'post_anonymous', 'class="inputbox" size="1"', 'value', 'text', $category->post_anonymous);
-		$lists ['topic_ordering']  = HTMLHelper::_('select.genericlist', $topic_ordering_options, 'topic_ordering', 'class="inputbox" size="1"', 'value', 'text', $category->topic_ordering);
-		$lists ['allow_ratings']   = HTMLHelper::_('select.genericlist', $yesno, 'allow_ratings', 'class="inputbox" size="1"', 'value', 'text', $category->allow_ratings);
+		$lists ['published']       = HTMLHelper::_('select.genericlist', $published, 'published', 'class="inputbox form-control"', 'value', 'text', $category->published);
+		$lists ['forumLocked']     = HTMLHelper::_('select.genericlist', $yesno, 'locked', 'class="inputbox form-control" size="1"', 'value', 'text', $category->locked);
+		$lists ['forumReview']     = HTMLHelper::_('select.genericlist', $yesno, 'review', 'class="inputbox form-control" size="1"', 'value', 'text', $category->review);
+		$lists ['allow_polls']     = HTMLHelper::_('select.genericlist', $yesno, 'allow_polls', 'class="inputbox form-control" size="1"', 'value', 'text', $category->allow_polls);
+		$lists ['allow_anonymous'] = HTMLHelper::_('select.genericlist', $yesno, 'allow_anonymous', 'class="inputbox form-control" size="1"', 'value', 'text', $category->allow_anonymous);
+		$lists ['post_anonymous']  = HTMLHelper::_('select.genericlist', $post_anonymous, 'post_anonymous', 'class="inputbox form-control" size="1"', 'value', 'text', $category->post_anonymous);
+		$lists ['topic_ordering']  = HTMLHelper::_('select.genericlist', $topic_ordering_options, 'topic_ordering', 'class="inputbox form-control" size="1"', 'value', 'text', $category->topic_ordering);
+		$lists ['allow_ratings']   = HTMLHelper::_('select.genericlist', $yesno, 'allow_ratings', 'class="inputbox form-control" size="1"', 'value', 'text', $category->allow_ratings);
 
 		$options                 = array();
 		$options[0]              = HTMLHelper::_('select.option', '0', Text::_('COM_KUNENA_A_CATEGORY_CFG_OPTION_NEVER'));
 		$options[1]              = HTMLHelper::_('select.option', '1', Text::_('COM_KUNENA_A_CATEGORY_CFG_OPTION_SECTION'));
 		$options[2]              = HTMLHelper::_('select.option', '2', Text::_('COM_KUNENA_A_CATEGORY_CFG_OPTION_CATEGORY'));
 		$options[3]              = HTMLHelper::_('select.option', '3', Text::_('COM_KUNENA_A_CATEGORY_CFG_OPTION_SUBCATEGORY'));
-		$lists['display_parent'] = HTMLHelper::_('select.genericlist', $options, 'params[display][index][parent]', 'class="inputbox" size="1"', 'value', 'text', $category->params->get('display.index.parent', '3'));
+		$lists['display_parent'] = HTMLHelper::_('select.genericlist', $options, 'params[display][index][parent]', 'class="inputbox form-control" size="1"', 'value', 'text', $category->params->get('display.index.parent', '3'));
 
 		unset($options[1]);
 
-		$lists['display_children'] = HTMLHelper::_('select.genericlist', $options, 'params[display][index][children]', 'class="inputbox" size="1"', 'value', 'text', $category->params->get('display.index.children', '3'));
+		$lists['display_children'] = HTMLHelper::_('select.genericlist', $options, 'params[display][index][children]', 'class="inputbox form-control" size="1"', 'value', 'text', $category->params->get('display.index.children', '3'));
 
 		$topicicons     = array();
 		$topiciconslist = Folder::folders(JPATH_ROOT . '/media/kunena/topic_icons');
@@ -162,15 +162,15 @@ class KunenaAdminModelCategories extends KunenaModel
 			$value = $category->iconset;
 		}
 
-		$lists ['category_iconset'] = HTMLHelper::_('select.genericlist', $topicicons, 'iconset', 'class="inputbox" size="1"', 'value', 'text', $value);
+		$lists ['category_iconset'] = HTMLHelper::_('select.genericlist', $topicicons, 'iconset', 'class="inputbox form-control" size="1"', 'value', 'text', $value);
 
 		return $lists;
 	}
 
 	/**
 	 * @return boolean|KunenaForumCategory|void
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getAdminCategory()
 	{
@@ -195,14 +195,14 @@ class KunenaAdminModelCategories extends KunenaModel
 				// New category is by default child of the first section -- this will help new users to do it right
 				$db = Factory::getDBO();
 
-				$query  = $db->getQuery(true)
+				$query = $db->getQuery(true)
 					->select('a.id, a.name')
 					->from("{$db->quoteName('#__kunena_categories')} AS a")
 					->where("parent_id={$db->quote('0')}")
 					->where("id!={$db->quote($category->id)}")
 					->order('ordering');
 
-				$db->setQuery((string) $query);
+				$db->setQuery($query);
 
 				try
 				{
@@ -234,8 +234,8 @@ class KunenaAdminModelCategories extends KunenaModel
 
 	/**
 	 * @return array|boolean
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getAdminModerators()
 	{
@@ -252,12 +252,12 @@ class KunenaAdminModelCategories extends KunenaModel
 	}
 
 	/**
-	 * @param   null $pks   pks
-	 * @param   null $order order
+	 * @param   null  $pks    pks
+	 * @param   null  $order  order
 	 *
 	 * @return boolean
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function saveorder($pks = null, $order = null)
 	{
@@ -336,8 +336,8 @@ class KunenaAdminModelCategories extends KunenaModel
 	/**
 	 * Get list of categories to be displayed in drop-down select in batch
 	 *
-	 * @since 5.1.0
 	 * @return array
+	 * @since 5.1.0
 	 * @throws Exception
 	 * @throws null
 	 */
@@ -352,16 +352,16 @@ class KunenaAdminModelCategories extends KunenaModel
 			$batch_categories [] = HTMLHelper::_('select.option', $category->id, str_repeat('...', count($category->indent) - 1) . ' ' . $category->name);
 		}
 
-		$list = HTMLHelper::_('select.genericlist', $batch_categories, 'batch_catid_target', 'class="inputbox" size="1"', 'value', 'text', 'select');
+		$list = HTMLHelper::_('select.genericlist', $batch_categories, 'batch_catid_target', 'class="inputbox form-control" size="1"', 'value', 'text', 'select');
 
 		return $list;
 	}
 
 	/**
 	 * @return array|KunenaForumCategory[]
-	 * @throws Exception
-	 * @throws null
 	 * @since Kunena
+	 * @throws null
+	 * @throws Exception
 	 */
 	public function getAdminCategories()
 	{
@@ -380,7 +380,7 @@ class KunenaAdminModelCategories extends KunenaModel
 				'filter_allow_polls' => $this->getState('filter.allow_polls'),
 				'filter_review'      => $this->getState('filter.review'),
 				'filter_anonymous'   => $this->getState('filter.anonymous'),
-				'action'             => 'admin', );
+				'action'             => 'admin',);
 
 			$catid      = $this->getState('item.id', 0);
 			$categories = array();
@@ -417,8 +417,8 @@ class KunenaAdminModelCategories extends KunenaModel
 			foreach ($this->_admincategories as $category)
 			{
 				// TODO: Following is needed for J!2.5 only:
-				$parent            = $category->getParent();
-				$siblings          = array_keys(KunenaForumCategoryHelper::getCategoryTree($category->parent_id));
+				$parent   = $category->getParent();
+				$siblings = array_keys(KunenaForumCategoryHelper::getCategoryTree($category->parent_id));
 
 				if ($parent)
 				{

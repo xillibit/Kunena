@@ -27,9 +27,9 @@ class KunenaAdminModelUser extends KunenaModel
 	/**
 	 * @return array|KunenaForumTopic[]|void
 	 *
-	 * @throws Exception
-	 * @throws null
 	 * @since Kunena
+	 * @throws null
+	 * @throws Exception
 	 */
 	public function getSubscriptions()
 	{
@@ -40,7 +40,7 @@ class KunenaAdminModelUser extends KunenaModel
 		$query->select('topic_id AS thread')
 			->from($db->quoteName('#__kunena_user_topics'))
 			->where('user_id=' . $userid . ' AND subscribed=1');
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -71,8 +71,8 @@ class KunenaAdminModelUser extends KunenaModel
 	/**
 	 * @return KunenaForumCategory[]
 	 *
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getCatsubcriptions()
 	{
@@ -86,8 +86,8 @@ class KunenaAdminModelUser extends KunenaModel
 	/**
 	 * @return array|void
 	 *
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getIPlist()
 	{
@@ -98,8 +98,8 @@ class KunenaAdminModelUser extends KunenaModel
 		$query->select('ip')
 			->from($db->quoteName('#__kunena_messages'))
 			->where('userid=' . $userid)
-		->group('ip');
-		$db->setQuery((string) $query);
+			->group('ip');
+		$db->setQuery($query);
 
 		try
 		{
@@ -117,13 +117,13 @@ class KunenaAdminModelUser extends KunenaModel
 		if ($iplist)
 		{
 			$iplist = "'{$iplist}'";
-			$query = $db->getQuery(true);
+			$query  = $db->getQuery(true);
 			$query->select('m.ip,m.userid,u.username,COUNT(*) as mescnt')
 				->from($db->quoteName('#__kunena_messages', 'm'))
-				->innerJoin($db->quoteName('#__users', 'u') . 'ON m.userid=u.id')
+				->innerJoin($db->quoteName('#__users', 'u') . ' ON m.userid=u.id')
 				->where('m.ip IN (' . $iplist . ')')
 				->group('m.userid,m.ip');
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -150,8 +150,8 @@ class KunenaAdminModelUser extends KunenaModel
 	/**
 	 * @return mixed
 	 *
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getListmodcats()
 	{
@@ -173,8 +173,8 @@ class KunenaAdminModelUser extends KunenaModel
 
 		$params  = array(
 			'sections' => false,
-			'action'   => 'read', );
-		$modCats = HTMLHelper::_('kunenaforum.categorylist', 'catid[]', 0, $categoryList, $params, 'class="inputbox" multiple="multiple" size="15"', 'value', 'text', $modCatList, 'kforums');
+			'action'   => 'read',);
+		$modCats = HTMLHelper::_('kunenaforum.categorylist', 'catid[]', 0, $categoryList, $params, 'class="inputbox form-control" multiple="multiple" size="15"', 'value', 'text', $modCatList, 'kforums');
 
 		return $modCats;
 	}
@@ -182,8 +182,8 @@ class KunenaAdminModelUser extends KunenaModel
 	/**
 	 * @return KunenaUser
 	 *
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getUser()
 	{
@@ -196,8 +196,8 @@ class KunenaAdminModelUser extends KunenaModel
 
 	/**
 	 * @return array|mixed|void
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getListuserranks()
 	{
@@ -209,7 +209,7 @@ class KunenaAdminModelUser extends KunenaModel
 		$query->select('*')
 			->from($db->quoteName('#__kunena_ranks'))
 			->where('rank_special = \'1\'');
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -230,7 +230,7 @@ class KunenaAdminModelUser extends KunenaModel
 		}
 
 		// Build special ranks select list
-		$selectRank = HTMLHelper::_('select.genericlist', $yesnoRank, 'newrank', 'class="inputbox" size="5"', 'value', 'text', $user->rank);
+		$selectRank = HTMLHelper::_('select.genericlist', $yesnoRank, 'newrank', 'class="inputbox form-control" size="5"', 'value', 'text', $user->rank);
 
 		return $selectRank;
 	}
@@ -242,13 +242,13 @@ class KunenaAdminModelUser extends KunenaModel
 	 */
 	public function getMovecatslist()
 	{
-		return HTMLHelper::_('kunenaforum.categorylist', 'catid', 0, array(), array(), 'class="inputbox"', 'value', 'text');
+		return HTMLHelper::_('kunenaforum.categorylist', 'catid', 0, array(), array(), 'class="inputbox form-control"', 'value', 'text');
 	}
 
 	/**
 	 * @return array|string|void
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getMoveuser()
 	{
@@ -262,11 +262,11 @@ class KunenaAdminModelUser extends KunenaModel
 		}
 
 		$userids = implode(',', $userids);
-		$query = $db->getQuery(true);
+		$query   = $db->getQuery(true);
 		$query->select('id,username')
 			->from($db->quoteName('#__users'))
 			->where('id IN(' . $userids . ')');
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{

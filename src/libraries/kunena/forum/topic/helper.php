@@ -198,8 +198,8 @@ abstract class KunenaForumTopicHelper
 		$query  = $db->getQuery(true);
 		$query->select('*')
 			->from($db->quoteName('#__kunena_topics'))
-			->where('id IN (' . $idlist . ')');
-		$db->setQuery((string) $query);
+			->where($db->quoteName('id') . ' IN (' . $idlist . ')');
+		$db->setQuery($query);
 
 		try
 		{
@@ -368,7 +368,7 @@ abstract class KunenaForumTopicHelper
 			$query = "SELECT COUNT(*) FROM #__kunena_topics AS tt WHERE {$where}";
 		}
 
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -400,7 +400,7 @@ abstract class KunenaForumTopicHelper
 			$query  = $db->getQuery(true);
 			$query->select('tt.*, ut.posts AS myposts, ut.last_post_id AS my_last_post_id, ut.favorite, tt.last_post_id AS lastread, 0 AS unread')
 				->from($db->quoteName('#__kunena_user_topics', 'ut'))
-				->innerJoin($db->quoteName('#__kunena_topics', 'tt') . 'ON tt.id=ut.topic_id')
+				->innerJoin($db->quoteName('#__kunena_topics', 'tt') . ' ON ' . $db->quoteName('tt.id') . ' = ' . $db->quoteName('ut.topic_id'))
 				->where($where)
 				->group($orderby);
 		}
@@ -409,7 +409,7 @@ abstract class KunenaForumTopicHelper
 			$query  = $db->getQuery(true);
 			$query->select('tt.*, ut.posts AS myposts, ut.last_post_id AS my_last_post_id, ut.favorite, tt.last_post_id AS lastread, 0 AS unread')
 				->from($db->quoteName('#__kunena_topics', 'tt'))
-				->leftJoin($db->quoteName('#__kunena_user_topics', 'ut') . 'ON tt.id=ut.topic_id AND ut.user_id=' . $db->quote($user->userid))
+				->leftJoin($db->quoteName('#__kunena_user_topics', 'ut') . ' ON ' . $db->quoteName('tt.id') . ' = ' . $db->quoteName('ut.topic_id') . ' AND ' . $db->quoteName('ut.user_id') . ' = ' . $db->quote($user->userid))
 				->where($where)
 				->group($orderby);
 		}
@@ -499,7 +499,7 @@ abstract class KunenaForumTopicHelper
 
 		foreach ($queries as $query)
 		{
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -547,7 +547,7 @@ abstract class KunenaForumTopicHelper
 
 		foreach ($queries as $query)
 		{
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -589,11 +589,11 @@ abstract class KunenaForumTopicHelper
 
 		if (is_array($ids))
 		{
-			$threads = 'AND m.thread IN (' . implode(',', $ids) . ')';
+			$threads = 'AND ' . $db->quoteName('m.thread') . ' IN (' . implode(',', $ids) . ')';
 		}
 		elseif ((int) $ids)
 		{
-			$threads = 'AND m.thread=' . (int) $ids;
+			$threads = 'AND ' . $db->quoteName('m.thread') . ' = ' . $db->quote((int) $ids);
 		}
 		else
 		{
@@ -607,7 +607,7 @@ abstract class KunenaForumTopicHelper
 				$start = 1;
 			}
 
-			$topics = " AND (tt.id BETWEEN {$start} AND {$end})";
+			$topics = " AND (" . $db->quoteName('tt.id') . " BETWEEN {$start} AND {$end})";
 		}
 		else
 		{
@@ -617,22 +617,22 @@ abstract class KunenaForumTopicHelper
 		// Mark all empty topics as deleted
 		$query  = $db->getQuery(true);
 		$query->update($db->quoteName('#__kunena_topics', 'tt'))
-			->leftJoin($db->quoteName('#__kunena_messages', 'm'). 'ON m.thread=tt.id AND tt.hold=m.hold')
-			->set('tt.hold = 4,
-				tt.posts = 0,
-				tt.attachments = 0,
-				tt.first_post_id = 0,
-				tt.first_post_time = 0,
-				tt.first_post_userid = 0,
-				tt.first_post_message = \'\',
-				tt.first_post_guest_name = \'\',
-				tt.last_post_id = 0,
-				tt.last_post_time = 0,
-				tt.last_post_userid = 0,
-				tt.last_post_message = \'\',
-				tt.last_post_guest_name = \'\'')
+			->leftJoin($db->quoteName('#__kunena_messages', 'm'). ' ON ' . $db->quoteName('m.thread') . ' = ' . $db->quoteName('tt.id') . ' AND ' . $db->quoteName('tt.hold') . ' = ' . $db->quoteName('m.hold'))
+			->set($db->quoteName('tt.hold') . ' = 4')
+			->set($db->quoteName('tt.posts') . ' = 0')
+			->set($db->quoteName('tt.attachments') . ' = 0')
+			->set($db->quoteName('tt.first_post_id') . ' = 0')
+			->set($db->quoteName('tt.first_post_time') . ' = 0')
+			->set($db->quoteName('tt.first_post_userid') . ' = 0')
+			->set($db->quoteName('tt.first_post_message') . ' =  \'\'')
+			->set($db->quoteName('tt.first_post_guest_name') . ' =  \'\'')
+			->set($db->quoteName('tt.last_post_id') . ' = 0')
+			->set($db->quoteName('tt.last_post_time') . ' = 0')
+			->set($db->quoteName('tt.last_post_userid') . ' = 0')
+			->set($db->quoteName('tt.last_post_message') . ' =  \'\'')
+			->set($db->quoteName('tt.last_post_guest_name') . ' =  \'\'')
 			->where('tt.moved_id=0 AND tt.hold!=4 AND m.id IS NULL ' . $topics . ' ' . $threads);
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -654,7 +654,7 @@ abstract class KunenaForumTopicHelper
 			) AS c ON tt.id=c.thread
 			SET tt.hold = c.hold
 			WHERE tt.moved_id=0 {$topics}";
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -695,7 +695,7 @@ abstract class KunenaForumTopicHelper
 				tt.last_post_message = tmax.message,
 				tt.last_post_guest_name = mmax.name
 			WHERE moved_id=0 {$topics}";
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -757,12 +757,17 @@ abstract class KunenaForumTopicHelper
 
 			$db = Factory::getDBO();
 			$query  = $db->getQuery(true);
-			$query->select('m.thread AS id, MIN(m.id) AS lastread, SUM(1) AS unread')
+			$query->select($db->quoteName('m.thread') . ' AS ' . $db->quoteName('id') . ', MIN(' . $db->quoteName('m.id') . ') AS ' . $db->quoteName('lastread') . ', SUM(1) AS ' . $db->quoteName('unread'))
 				->from($db->quoteName('#__kunena_messages', 'm'))
-				->leftJoin($db->quoteName('#__kunena_user_read', 'ur') . 'ON ur.topic_id=m.thread AND user_id=' . $db->quote($user->userid))
-				->where('m.hold=0 AND m.moved=0 AND m.thread IN (' . $idstr . ') AND m.time>' . $db->quote($session->getAllReadTime()) . ' AND (ur.time IS NULL OR m.time>ur.time)')
-				->group('thread');
-			$db->setQuery((string) $query);
+				->leftJoin($db->quoteName('#__kunena_user_read', 'ur') . ' ON ' . $db->quoteName('ur.topic_id') . ' = ' . $db->quoteName('m.thread') . ' AND ' . $db->quoteName('user_id') . ' = ' . $db->quote($user->userid))
+				->where($db->quoteName('m.hold') . ' = 0')
+				->andWhere($db->quoteName('m.moved') . ' = 0')
+				->andWhere($db->quoteName('m.thread') . ' IN (' . $idstr . ')')
+				->andWhere($db->quoteName('m.time') . ' > ' . $db->quote($session->getAllReadTime()))
+				->andWhere($db->quoteName('ur.time') . ' IS NULL')
+				->orWhere($db->quoteName('m.time') . ' > ' . $db->quoteName('ur.time'))
+				->group($db->quoteName('thread'));
+			$db->setQuery($query);
 
 			try
 			{

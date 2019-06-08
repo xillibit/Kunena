@@ -99,9 +99,9 @@ abstract class KunenaForumMessageHelper
 		$query = $db->getQuery(true);
 		$query->select('m.*, t.message')
 			->from($db->quoteName('#__kunena_messages', 'm'))
-			->innerJoin($db->quoteName('#__kunena_messages_text', 't') . 'ON m.id=t.mesid')
+			->innerJoin($db->quoteName('#__kunena_messages_text', 't') . ' ON m.id = t.mesid')
 			->where('m.id IN (' . $idlist .')');
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -196,8 +196,9 @@ abstract class KunenaForumMessageHelper
 		$query = $db->getQuery(true);
 		$query->select('m.*, t.message')
 			->from($db->quoteName('#__kunena_messages', 'm'))
-			->innerJoin($db->quoteName('#__kunena_messages_text', 't') . 'ON m.id=t.mesid')
-			->where('m.thread=' . $db->quote($topic_id) .' AND m.hold IN (' . $hold .')')
+			->innerJoin($db->quoteName('#__kunena_messages_text', 't') . ' ON m.id = t.mesid')
+			->where('m.thread = ' . $db->quote($topic_id))
+			->andWhere('m.hold IN (' . $hold . ')')
 			->order('m.time ' . $ordering);
 		$db->setQuery($query, $start, $limit);
 
@@ -275,26 +276,26 @@ abstract class KunenaForumMessageHelper
 			->order($orderby);
 
 		$authorise = 'read';
-		$hold      = 'm.hold=0';
+		$hold      = 'm.hold = 0';
 		$userfield = 'm.userid';
 
 		switch ($mode)
 		{
 			case 'unapproved':
 				$authorise = 'approve';
-				$hold      = "m.hold=1";
+				$hold      = "m.hold = 1";
 				break;
 			case 'deleted':
 				$authorise = 'undelete';
-				$hold      = "m.hold>=2";
+				$hold      = "m.hold >= 2";
 				break;
 			case 'mythanks':
 				$userfield = 'th.userid';
-				$query->innerJoin('#__kunena_thankyou AS th ON m.id = th.postid');
+				$query->innerJoin($db->quoteName('#__kunena_thankyou','th') . ' ON m.id = th.postid');
 				break;
 			case 'thankyou':
 				$userfield = 'th.targetuserid';
-				$query->innerJoin('#__kunena_thankyou AS th ON m.id = th.postid');
+				$query->innerJoin($db->quoteName('#__kunena_thankyou','th') . ' ON m.id = th.postid');
 				break;
 			case 'recent':
 			default:
@@ -325,13 +326,13 @@ abstract class KunenaForumMessageHelper
 		}
 
 		$allowed = implode(',', array_keys($catlist));
-		$query->where("m.catid IN ({$allowed})");
+		$query->where('m.catid IN (' . $allowed . ')');
 
 		$query->where($hold);
 
 		if ($user)
 		{
-			$query->where("{$userfield}={$db->quote($user)}");
+			$query->where($db->quoteName($userfield)  . ' = ' . $db->quote($user));
 		}
 
 		// Negative time means no time
@@ -346,7 +347,7 @@ abstract class KunenaForumMessageHelper
 
 		if ($starttime > 0)
 		{
-			$query->where("m.time>{$db->quote($starttime)}");
+			$query->where('m.time > ' . $db->quote($starttime));
 		}
 
 		if ($where)
@@ -355,7 +356,9 @@ abstract class KunenaForumMessageHelper
 		}
 
 		$cquery = clone $query;
-		$cquery->clear('select')->clear('order')->select('COUNT(*)');
+		$cquery->clear('select')
+			->clear('order')
+			->select('COUNT(*)');
 		$db->setQuery($cquery);
 
 		try
@@ -543,10 +546,10 @@ abstract class KunenaForumMessageHelper
 				SUM(mm.time<m.time) AS before_count,
 				SUM(mm.time>m.time) AS after_count')
 			->from($db->quoteName('#__kunena_messages' , 'm'))
-			->innerJoin($db->quoteName('#__kunena_messages' , 'mm') . 'ON m.thread=mm.thread')
+			->innerJoin($db->quoteName('#__kunena_messages' , 'mm') . ' ON m.thread = mm.thread')
 			->where('m.id IN (' . $idlist .')')
 			->group( 'm.id, mm.hold');
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -601,7 +604,7 @@ abstract class KunenaForumMessageHelper
 		}
 		elseif ((int) $topicids)
 		{
-			$where = 'WHERE m.thread=' . (int) $topicids;
+			$where = 'WHERE m.thread = ' . $db->quote((int) $topicids);
 		}
 		else
 		{
@@ -611,9 +614,9 @@ abstract class KunenaForumMessageHelper
 		// Update catid in all messages
 		$query  = $db->getQuery(true);
 		$query->update($db->quoteName('#__kunena_messages', 'm'))
-			->innerJoin($db->quoteName('#__kunena_attachments', 'tt') . 'ON tt.id=m.thread')
-			->set('m.catid=tt.category_id ' . $where);
-		$db->setQuery((string) $query);
+			->innerJoin($db->quoteName('#__kunena_attachments', 'tt') . ' ON tt.id = m.thread')
+			->set('m.catid = tt.category_id ' . $where);
+		$db->setQuery($query);
 
 		try
 		{
@@ -649,9 +652,10 @@ abstract class KunenaForumMessageHelper
 		$query  = $db->getQuery(true);
 		$query->select('m.*, t.message')
 			->from($db->quoteName('#__kunena_messages', 'm'))
-			->innerJoin($db->quoteName('#__kunena_messages_text', 't') . 'ON m.id=t.mesid')
-			->where('m.thread IN (' . $idlist . ') AND m.hold=0');
-		$db->setQuery((string) $query);
+			->innerJoin($db->quoteName('#__kunena_messages_text', 't') . ' ON m.id = t.mesid')
+			->where('m.thread IN (' . $idlist . ')')
+			->andWhere('m.hold = 0');
+		$db->setQuery($query);
 
 		try
 		{

@@ -62,7 +62,7 @@ abstract class KunenaForumTopicRateHelper
 	}
 
 	/**
-	 * Return sum of all rates gived to a topics by all users
+	 * Return sum of all rates given to a topics by all users
 	 *
 	 * @param   integer $id id
 	 *
@@ -73,16 +73,16 @@ abstract class KunenaForumTopicRateHelper
 	{
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
-		$query->select("(SUM(rate)/COUNT(rate)) AS selected")
-			->from('#__kunena_rate')
-			->where('topic_id = ' . $db->escape($id));
-		$db->setQuery((string) $query);
+		$query->select('(SUM(' . $db->quoteName('rate') . ')/COUNT(' . $db->quoteName('rate') . ')) AS ' . $db->quoteName('selected'))
+			->from($db->quoteName('#__kunena_rate'))
+			->where($db->quoteName('topic_id') . ' = ' . $db->quote($id));
+		$db->setQuery($query);
 
 		return round($db->loadResult());
 	}
 
 	/**
-	 * Return sum of all rates gived to a topics by all users
+	 * Return sum of all rates given to a topics by all users
 	 *
 	 * @param   integer $id id
 	 *
@@ -93,10 +93,10 @@ abstract class KunenaForumTopicRateHelper
 	{
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
-		$query->select("(COUNT(rate)) AS selected")
-			->from('#__kunena_rate')
-			->where('topic_id = ' . $db->escape($id));
-		$db->setQuery((string) $query);
+		$query->select('(COUNT(' . $db->quoteName('rate') . ')) AS ' . $db->quoteName('selected'))
+			->from($db->quoteName('#__kunena_rate'))
+			->where($db->quoteName('topic_id') . ' = ' . $db->quote($id));
+		$db->setQuery($query);
 
 		return round($db->loadResult());
 	}
@@ -115,11 +115,11 @@ abstract class KunenaForumTopicRateHelper
 	{
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
-		$query->select("rate")
-			->from('#__kunena_rate')
-			->where('topic_id = ' . $db->escape($id))
-			->andWhere('userid = ' . $db->escape($userid));
-		$db->setQuery((string) $query);
+		$query->select($db->quoteName('rate'))
+			->from($db->quoteName('#__kunena_rate'))
+			->where($db->quoteName('topic_id') . ' = ' . $db->quote($id))
+			->andWhere($db->quoteName('userid') . ' = ' . $db->quote($userid));
+		$db->setQuery($query);
 
 		return round($db->loadResult());
 	}

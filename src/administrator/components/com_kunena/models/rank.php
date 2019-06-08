@@ -27,8 +27,8 @@ class KunenaAdminModelRank extends KunenaModel
 	/**
 	 * @return mixed
 	 *
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getRankspaths()
 	{
@@ -64,7 +64,7 @@ class KunenaAdminModelRank extends KunenaModel
 			$rank_list[] = HTMLHelper::_('select.option', $path, $file);
 		}
 
-		$list = HTMLHelper::_('select.genericlist', $rank_list, 'rank_image', 'class="inputbox" onchange="update_rank(this.options[selectedIndex].value);" onmousemove="update_rank(this.options[selectedIndex].value);"', 'value', 'text', isset($selected->rank_image) ? $rank_images[$selected->rank_image] : '');
+		$list = HTMLHelper::_('select.genericlist', $rank_list, 'rank_image', 'class="inputbox form-control" onchange="update_rank(this.options[selectedIndex].value);" onmousemove="update_rank(this.options[selectedIndex].value);"', 'value', 'text', isset($selected->rank_image) ? $rank_images[$selected->rank_image] : '');
 
 		return $list;
 	}
@@ -72,8 +72,8 @@ class KunenaAdminModelRank extends KunenaModel
 	/**
 	 * @return mixed|void
 	 *
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	public function getRank()
 	{
@@ -87,7 +87,7 @@ class KunenaAdminModelRank extends KunenaModel
 			$query->select('*')
 				->from($db->quoteName('#__kunena_ranks'))
 				->where('rank_id=' . $db->quote($id));
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{

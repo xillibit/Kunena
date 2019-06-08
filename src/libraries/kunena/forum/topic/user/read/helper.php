@@ -145,9 +145,10 @@ abstract class KunenaForumTopicUserReadHelper
 		$db     = Factory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*')
-			->from('#__kunena_user_read')
-			->where('user_id=' . $db->quote($user->userid). ' AND topic_id IN (' . $idlist . ')');
-		$db->setQuery((string) $query);
+			->from($db->quoteName('#__kunena_user_read'))
+			->where($db->quoteName('user_id' ) . ' = ' . $db->quote($user->userid))
+			->andWhere($db->quoteName('topic_id') . ' IN (' . $idlist . ')');
+		$db->setQuery($query);
 
 		try
 		{
@@ -189,10 +190,11 @@ abstract class KunenaForumTopicUserReadHelper
 		// Update database
 		$db    = Factory::getDBO();
 		$query = $db->getQuery(true);
-		$query->update('#__kunena_user_read')
-			->set('topic_id=' . $db->quote($new->id) . ', category_id= ' . $db->quote($new->category_id))
-			->where('topic_id=' . $db->quote($old->id));
-		$db->setQuery((string) $query);
+		$query->update($db->quoteName('#__kunena_user_read'))
+			->set($db->quoteName('topic_id') . ' = ' . $db->quote($new->id))
+			->set($db->quoteName('category_id') . ' = ' . $db->quote($new->category_id))
+			->where($db->quoteName('topic_id') . ' = ' . $db->quote($old->id));
+		$db->setQuery($query);
 
 		try
 		{
@@ -255,7 +257,7 @@ abstract class KunenaForumTopicUserReadHelper
 
 		foreach ($queries as $query)
 		{
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -294,9 +296,10 @@ abstract class KunenaForumTopicUserReadHelper
 		$db     = Factory::getDBO();
 		$query = $db->getQuery(true);
 		$query->select('*')
-			->from('#__kunena_user_read')
-			->where('user_id IN (' . $idlist . ') AND topic_id=' . $id);
-		$db->setQuery((string) $query);
+			->from($db->quoteName('#__kunena_user_read'))
+			->where($db->quoteName('user_id') . ' IN (' . $idlist . ')')
+			->andWhere($db->quoteName('topic_id') . ' = ' . $db->quote($id));
+		$db->setQuery($query);
 
 		try
 		{
@@ -334,9 +337,9 @@ abstract class KunenaForumTopicUserReadHelper
 		$db    = Factory::getDBO();
 		$query = $db->getQuery(true);
 		$query->update($db->quoteName('#__user_read', 'ur'))
-			->innerJoin($db->quoteName('#__kunena_topics', 't') . ' ON t.id=ur.topic_id')
-			->set('ur.category_id=t.category_id');
-		$db->setQuery((string) $query);
+			->innerJoin($db->quoteName('#__kunena_topics', 't') . ' ON ' . $db->quoteName('t.id') . ' = ' . $db->quoteName('ur.topic_id'))
+			->set($db->quoteName('ur.category_id') . ' = ' . $db->quoteName('t.category_id'));
+		$db->setQuery($query);
 
 		try
 		{
@@ -366,8 +369,8 @@ abstract class KunenaForumTopicUserReadHelper
 		$timestamp = Factory::getDate()->toUnix() - 60 * 60 * 24 * $days;
 		$query = $db->getQuery(true);
 		$query->delete($db->quoteName('#__kunena_user_read'))
-			->where('time<' . $db->quote($timestamp));
-		$db->setQuery((string) $query);
+			->where($db->quoteName('time') . ' < ' . $db->quote($timestamp));
+		$db->setQuery($query);
 
 		try
 		{

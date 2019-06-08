@@ -1,0 +1,5 @@
+mariadb
+user : admin
+mot de passe : bielle74
+
+toujours se connecter via : mariadb -u admin -p

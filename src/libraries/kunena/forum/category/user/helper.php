@@ -140,8 +140,9 @@ abstract class KunenaForumCategoryUserHelper
 		$query  = $db->getQuery(true);
 		$query->select('*')
 			->from($db->quoteName('#__kunena_user_categories'))
-			->where($db->quoteName('user_id') . ' = ' . $db->quote($user->userid) . ' AND ' . $db->quoteName('category_id') . ' IN (' . $idlist . ')');
-		$db->setQuery((string) $query);
+			->where($db->quoteName('user_id') . ' = ' . $db->quote($user->userid))
+			->andWhere($db->quoteName('category_id') . ' IN (' . $idlist . ')');
+		$db->setQuery($query);
 
 		try
 		{
@@ -197,7 +198,7 @@ abstract class KunenaForumCategoryUserHelper
 			}
 			else
 			{
-				$insertList[] = "{$db->quote($user->userid)}, {$db->quote($item->category_id)}, {$db->quote($time)}";
+			    $insertList[] = $db->quote($user->userid) . ', ' . $db->quote($item->category_id) . ', ' . $db->quote($time);
 			}
 		}
 
@@ -207,11 +208,19 @@ abstract class KunenaForumCategoryUserHelper
 			$query  = $db->getQuery(true);
 			$query
 				->update($db->quoteName('#__kunena_user_categories'))
-				->set("allreadtime={$db->quote($time)}")
-				->where("user_id={$db->quote($user->userid)}")
-				->where("category_id IN ({$idlist})");
-			$db->setQuery((string) $query);
-			$db->execute();
+				->set('allreadtime = ' . $db->quote($time))
+				->where('user_id = ' . $db->quote($user->userid))
+				->where($db->quoteName('category_id') . ' IN (' . $idlist . ')');
+			$db->setQuery($query);
+
+			try
+			{
+				$db->execute();
+			}
+			catch (JDatabaseExceptionExecuting $e)
+			{
+				KunenaError::displayDatabaseError($e);
+			}
 		}
 
 		if ($insertList)
@@ -221,8 +230,16 @@ abstract class KunenaForumCategoryUserHelper
 				->insert($db->quoteName('#__kunena_user_categories'))
 				->columns('user_id, category_id, allreadtime')
 				->values($insertList);
-			$db->setQuery((string) $query);
-			$db->execute();
+			$db->setQuery($query);
+
+			try
+			{
+				$db->execute();
+			}
+			catch (JDatabaseExceptionExecuting $e)
+			{
+				KunenaError::displayDatabaseError($e);
+			}
 		}
 	}
 }

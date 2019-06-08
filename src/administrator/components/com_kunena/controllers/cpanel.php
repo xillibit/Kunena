@@ -32,10 +32,10 @@ class KunenaAdminControllerCpanel extends KunenaController
 	/**
 	 * Construct
 	 *
-	 * @param   array $config construct
+	 * @param   array  $config  construct
 	 *
-	 * @throws Exception
 	 * @since    2.0.0-BETA2
+	 * @throws Exception
 	 */
 	public function __construct($config = array())
 	{
@@ -50,8 +50,8 @@ class KunenaAdminControllerCpanel extends KunenaController
 	 *
 	 * @return array|null|string
 	 *
-	 * @throws Exception
 	 * @since    2.0.0-BETA2
+	 * @throws Exception
 	 */
 	public static function onGetIcons()
 	{
@@ -67,7 +67,7 @@ class KunenaAdminControllerCpanel extends KunenaController
 				->from($db->quoteName('#__updates'))
 				->where($db->quoteName('extension_id') . ' > 0')
 				->where($db->quoteName('detailsurl') . ' LIKE ' . $db->quote($updateSite));
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 			$list = (array) $db->loadObjectList();
 
 			if ($list)
@@ -95,7 +95,7 @@ class KunenaAdminControllerCpanel extends KunenaController
 					->from($db->quoteName('#__update_sites'))
 					->where($db->quoteName('enabled') . ' = 0')
 					->where($db->quoteName('location') . ' LIKE ' . $db->quote($updateSite));
-				$db->setQuery((string) $query);
+				$db->setQuery($query);
 				$updateInfo = !$db->loadResult();
 			}
 		}
@@ -103,14 +103,14 @@ class KunenaAdminControllerCpanel extends KunenaController
 		if (!empty($updateInfo->version) && version_compare(KunenaForum::version(), $updateInfo->version, '<'))
 		{
 			// Has updates
-			Factory::getApplication()->enqueueMessage(Text::_('Kunena Update Found.  <a class="btn btn-small btn-info" href="index.php?option=com_installer&view=update&filter_search=kunena"> Update Now</a><br/> Please backup before updating.'), 'Notice');
+			Factory::getApplication()->enqueueMessage(Text::_('Kunena Update Found.  <a class="btn btn-small btn-outline-danger" href="index.php?option=com_installer&view=update&filter_search=kunena"> Update Now</a><br/> Please backup before updating.'), 'Notice');
 			$icon = 'media/kunena/images/icons/icon-48-kupdate-update-white.png';
 			$link = 'index.php?option=com_installer&view=update&filter_search=kunena';
 		}
 		elseif (!empty($updateInfo->addons))
 		{
 			// Has updated add-ons
-			Factory::getApplication()->enqueueMessage(Text::_('Kunena Update Found.  <a class="btn btn-small btn-info" href="index.php?option=com_installer&view=update&filter_search=kunena"> Update Now</a><br/> Please backup before updating.'), 'Notice');
+			Factory::getApplication()->enqueueMessage(Text::_('Kunena Update Found.  <a class="btn btn-small btn-outline-danger" href="index.php?option=com_installer&view=update&filter_search=kunena"> Update Now</a><br/> Please backup before updating.'), 'Notice');
 			$icon = 'media/kunena/images/icons/icon-48-kupdate-update-white.png';
 			$link = 'index.php?option=com_installer&view=update&filter_search=kunena';
 		}
@@ -127,13 +127,13 @@ class KunenaAdminControllerCpanel extends KunenaController
 	/**
 	 * Display
 	 *
-	 * @param   bool $cachable  cachable
-	 * @param   bool $urlparams urlparams
+	 * @param   bool  $cachable   cachable
+	 * @param   bool  $urlparams  urlparams
 	 *
 	 * @return Joomla\CMS\MVC\Controller\BaseController|void
 	 *
-	 * @throws Exception
 	 * @since    2.0.0-BETA2
+	 * @throws Exception
 	 * @throws null
 	 */
 	public function display($cachable = false, $urlparams = false)
@@ -150,7 +150,7 @@ class KunenaAdminControllerCpanel extends KunenaController
 				->update($db->quoteName('#__update_sites'))
 				->set($db->quoteName('enabled') . '=1')
 				->where($db->quoteName('location') . ' LIKE ' . $db->quote('https://update.kunena.org/%'));
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 			$db->execute();
 
 			$this->app->setUserState('pkg_kunena.updateCheck', $now + 60 * 60 * 6);

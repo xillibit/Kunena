@@ -108,7 +108,7 @@ class KunenaAdminControllerTools extends KunenaController
 			return;
 		}
 
-		$ids = $this->app->input->get('prune_forum', array(), 'post', 'array');
+		$ids = $this->app->input->get('prune_forum', array(), 'array');
 		$ids = ArrayHelper::toInteger($ids);
 
 		$categories = KunenaForumCategoryHelper::getCategories($ids, false, 'admin');
@@ -243,9 +243,9 @@ class KunenaAdminControllerTools extends KunenaController
 			$query->insert($db->quoteName('#__kunena_users') . '(userid, showOnline)')
 				->select('a.id AS userid, 1 AS showOnline')
 				->from($db->quoteName('#__users', 'a'))
-				->leftJoin($db->quoteName('#__kunena_users', 'b') . 'ON b.userid=a.id')
+				->leftJoin($db->quoteName('#__kunena_users', 'b') . ' ON b.userid=a.id')
 				->where('b.userid IS NULL');
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -263,13 +263,13 @@ class KunenaAdminControllerTools extends KunenaController
 
 		if ($userdel)
 		{
-			$query = $db->getQuery(true)
-				->delete('a')
-				->from($db->quoteName('#__kunena_users', 'a'))
-				->leftJoin($db->quoteName('#__users', 'b') . 'ON a.userid=b.id')
-				->where('b.username IS NULL');
-
-			$db->setQuery((string) $query);
+			// TODO :  need to find the correct way to convert this query to use JDatabaseQuery
+			$db->setQuery(
+				"DELETE a
+				FROM #__kunena_users AS a
+				LEFT JOIN #__users AS b ON a.userid=b.id
+				WHERE b.username IS NULL"
+			);
 
 			try
 			{
@@ -287,12 +287,8 @@ class KunenaAdminControllerTools extends KunenaController
 
 		if ($userdellife)
 		{
-			$query = $db->getQuery(true)
-				->delete('a')
-				->from($db->quoteName('#__kunena_users', 'a'))
-				->leftJoin($db->quoteName('#__users', 'b') . 'ON a.userid=b.id')
-				->where('banned=\'1000-01-01 00:00:00\'');
-			$db->setQuery((string) $query);
+			// TODO :  need to find the correct way to convert this query to use JDatabaseQuery
+			$db->setQuery("DELETE a FROM #__kunena_users AS a LEFT JOIN #__users AS b ON a.userid=b.id WHERE banned='1000-01-01 00:00:00'");
 
 			try
 			{
@@ -306,10 +302,10 @@ class KunenaAdminControllerTools extends KunenaController
 			}
 
 			$query = $db->getQuery(true)
-				->delete('a')
-				->from($db->quoteName('#__users', 'a'))
+				->delete($db->quoteName('#__users'))
 				->where('block=\'1\'');
-			$db->setQuery((string) $query);
+
+			$db->setQuery($query);
 
 			try
 			{
@@ -335,7 +331,7 @@ class KunenaAdminControllerTools extends KunenaController
 				->set('m.name = u.' . $queryName)
 				->where('m.userid = u.id');
 
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -349,46 +345,6 @@ class KunenaAdminControllerTools extends KunenaController
 			}
 
 			$this->app->enqueueMessage(Text::sprintf('COM_KUNENA_SYNC_USERS_RENAME_DONE', $db->getAffectedRows()));
-		}
-
-		if ($userdellife)
-		{
-			$query = $db->getQuery(true)
-				->delete('a')
-				->from($db->quoteName('#__kunena_users', 'a'))
-				->leftJoin($db->quoteName('#__users', 'b') . 'ON a.userid=b.id')
-				->where('banned=\'1000-01-01 00:00:00\'');
-			$db->setQuery((string) $query);
-
-			try
-			{
-				$db->execute();
-			}
-			catch (RuntimeException $e)
-			{
-				$this->app->enqueueMessage($e->getMessage());
-
-				return;
-			}
-
-			$query = $db->getQuery(true)
-				->delete('a')
-				->from($db->quoteName('#__users', 'a'))
-				->where('block=\'1\'');
-			$db->setQuery((string) $query);
-
-			try
-			{
-				$db->execute();
-			}
-			catch (RuntimeException $e)
-			{
-				$this->app->enqueueMessage($e->getMessage());
-
-				return;
-			}
-
-			$this->app->enqueueMessage(Text::sprintf('COM_KUNENA_SYNC_USERS_DELETE_DONE', $db->getAffectedRows()));
 		}
 
 		$this->setRedirect(KunenaRoute::_($this->baseurl, false));
@@ -437,7 +393,7 @@ class KunenaAdminControllerTools extends KunenaController
 			$db    = Factory::getDbo();
 			$query = $db->getQuery(true);
 			$query->select('MAX(thread)')->from('#__kunena_messages');
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			// Topic count
 			$state->maxId = (int) $db->loadResult();
@@ -788,11 +744,11 @@ class KunenaAdminControllerTools extends KunenaController
 			$db = Factory::getDbo();
 
 			$query = $db->getQuery(true)
-				->update("{$db->quoteName('#__kunena_messages')}")
+				->update($db->quoteName('#__kunena_messages'))
 				->set("subject=TRIM(TRIM(LEADING {$db->quote($re_string)} FROM subject))")
 				->where("subject LIKE {$db->quote($re_string.'%')}");
 
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -851,15 +807,23 @@ class KunenaAdminControllerTools extends KunenaController
 		if ($cleanup_days)
 		{
 			$clean_date = Factory::getDate()->toUnix() - ($cleanup_days * 86400);
-			$where      = 'WHERE time < ' . $clean_date;
+			$where      = 'time < ' . $clean_date;
 		}
 
 		$db = Factory::getDbo();
 
-		$query = $db->getQuery(true)
-			->update("{$db->quoteName('#__kunena_messages')}")->set('ip=NULL')->where($where);
+		if (!empty($where))
+		{
+			$query = $db->getQuery(true)
+				->update($db->quoteName('#__kunena_messages'))->set('ip=NULL')->where($where);
+		}
+		else
+		{
+			$query = $db->getQuery(true)
+				->update($db->quoteName('#__kunena_messages'))->set('ip=NULL');
+		}
 
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{
@@ -882,7 +846,7 @@ class KunenaAdminControllerTools extends KunenaController
 			$query = $db->getQuery(true)
 				->update($db->quoteName('#__kunena_users'))
 				->set('ip=NULL');
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{

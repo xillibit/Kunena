@@ -154,11 +154,11 @@ class KunenaAccess
 
 		// Load native category moderators and administrators
 		$db    = Factory::getDBO();
-		$query = $db->getQuery(true);
-		$query->select($db->quoteName(array('user_id', 'category_id', 'role')));
-		$query->from($db->quoteName('#__kunena_user_categories'));
-		$query->where($db->quoteName('role') . ' IN (1,2)');
-		$db->setQuery((string) $query);
+		$query = $db->getQuery(true)
+			->select($db->quoteName(array('user_id', 'category_id', 'role')))
+			->from($db->quoteName('#__kunena_user_categories'))
+			->where($db->quoteName('role') . ' IN (1,2)');
+		$db->setQuery($query);
 
 		try
 		{
@@ -188,7 +188,7 @@ class KunenaAccess
 	}
 
 	/**
-	 * @param   array $list list
+	 * @param   array  $list  list
 	 *
 	 * @return mixed|void
 	 * @since Kunena
@@ -243,7 +243,7 @@ class KunenaAccess
 	}
 
 	/**
-	 * @param   KunenaForumCategory $category category
+	 * @param   KunenaForumCategory  $category  category
 	 *
 	 * @return array
 	 * @since Kunena
@@ -278,7 +278,7 @@ class KunenaAccess
 	}
 
 	/**
-	 * @param   KunenaForumCategory $category category
+	 * @param   KunenaForumCategory  $category  category
 	 *
 	 * @return string
 	 * @since Kunena
@@ -343,13 +343,13 @@ window.addEvent('domready', function(){
 			$accesstypes [$string] = HTMLHelper::_('select.option', $category->accesstype, $string);
 		}
 
-		return HTMLHelper::_('select.genericlist', $accesstypes, 'accesstype', 'class="inputbox" size="' . count($accesstypes) . '" onchange="kShowAccessType(\'kaccess\', $(this))"', 'value', 'text', $category->accesstype);
+		return HTMLHelper::_('select.genericlist', $accesstypes, 'accesstype', 'class="inputbox form-control" size="' . count($accesstypes) . '" onchange="kShowAccessType(\'kaccess\', $(this))"', 'value', 'text', $category->accesstype);
 	}
 
 	/**
 	 * Get access groups for the selected category.
 	 *
-	 * @param   KunenaForumCategory $category Category
+	 * @param   KunenaForumCategory  $category  Category
 	 *
 	 * @return array|null
 	 * @since Kunena
@@ -379,7 +379,7 @@ window.addEvent('domready', function(){
 			$id                          = $category->access;
 			$name                        = $this->getGroupName($accesstype, $id);
 			$list["{$accesstype}.{$id}"] = array('type'  => 'joomla.level', 'id' => $id,
-			                                     'title' => $name, );
+			                                     'title' => $name,);
 		}
 
 		return $list;
@@ -388,8 +388,8 @@ window.addEvent('domready', function(){
 	/**
 	 * Get group name in selected access type. Can be removed only when all the calls has been removed.
 	 *
-	 * @param   string $accesstype Access type.
-	 * @param   mixed  $id         Group id.
+	 * @param   string  $accesstype  Access type.
+	 * @param   mixed   $id          Group id.
 	 *
 	 * @return string|void
 	 *
@@ -417,8 +417,8 @@ window.addEvent('domready', function(){
 	/**
 	 * Get category administrators.
 	 *
-	 * @param   int  $catid Category Id
-	 * @param   bool $all   all
+	 * @param   int   $catid  Category Id
+	 * @param   bool  $all    all
 	 *
 	 * @return array
 	 * @since Kunena
@@ -438,8 +438,8 @@ window.addEvent('domready', function(){
 	/**
 	 * Get category moderators.
 	 *
-	 * @param   int  $catid Category Id
-	 * @param   bool $all   all
+	 * @param   int   $catid  Category Id
+	 * @param   bool  $all    all
 	 *
 	 * @return array
 	 * @since Kunena
@@ -457,7 +457,7 @@ window.addEvent('domready', function(){
 	}
 
 	/**
-	 * @param   mixed $user user
+	 * @param   mixed  $user  user
 	 *
 	 * @return array
 	 * @since Kunena
@@ -476,9 +476,9 @@ window.addEvent('domready', function(){
 	/**
 	 * Assign user as moderator or resign him.
 	 *
-	 * @param   int   $category category
-	 * @param   mixed $user     user
-	 * @param   bool  $status   status
+	 * @param   int    $category  category
+	 * @param   mixed  $user      user
+	 * @param   bool   $status    status
 	 *
 	 * @return boolean
 	 *
@@ -514,7 +514,13 @@ window.addEvent('domready', function(){
 		if (($usercategory->role == 0 && $status) || ($usercategory->role == 1 && !$status))
 		{
 			$usercategory->role = $status;
-			$success            = $usercategory->save();
+
+			if (!$usercategory->params)
+			{
+				$usercategory->params = '';
+			}
+
+			$success = $usercategory->save();
 
 			// Clear role cache
 			$this->clearCache();
@@ -533,7 +539,7 @@ window.addEvent('domready', function(){
 	}
 
 	/**
-	 * @param   mixed $user user
+	 * @param   mixed  $user  user
 	 *
 	 * @return array
 	 * @since Kunena
@@ -550,7 +556,7 @@ window.addEvent('domready', function(){
 	}
 
 	/**
-	 * @param   mixed $user user
+	 * @param   mixed  $user  user
 	 *
 	 * @return mixed
 	 * @since Kunena
@@ -625,8 +631,8 @@ window.addEvent('domready', function(){
 	}
 
 	/**
-	 * @param   mixed $user  user
-	 * @param   int   $catid catid
+	 * @param   mixed  $user   user
+	 * @param   int    $catid  catid
 	 *
 	 * @return boolean
 	 * @since Kunena
@@ -670,8 +676,8 @@ window.addEvent('domready', function(){
 	}
 
 	/**
-	 * @param   mixed $user  user
-	 * @param   int   $catid catid
+	 * @param   mixed  $user   user
+	 * @param   int    $catid  catid
 	 *
 	 * @return boolean
 	 * @since Kunena
@@ -716,8 +722,8 @@ window.addEvent('domready', function(){
 	 *
 	 * Function returns a list of authorised actions. Missing actions are threaded as inherit.
 	 *
-	 * @param   KunenaForumCategory $category category
-	 * @param   int                 $userid   user id
+	 * @param   KunenaForumCategory  $category  category
+	 * @param   int                  $userid    user id
 	 *
 	 * @return array
 	 * @since Kunena
@@ -750,9 +756,9 @@ window.addEvent('domready', function(){
 	}
 
 	/**
-	 * @param   mixed $user   user
-	 * @param   int   $catid  catid
-	 * @param   bool  $string string
+	 * @param   mixed  $user    user
+	 * @param   int    $catid   catid
+	 * @param   bool   $string  string
 	 *
 	 * @return string|array
 	 * @since Kunena
@@ -797,12 +803,12 @@ window.addEvent('domready', function(){
 	}
 
 	/**
-	 * @param   int   $catid       catid
-	 * @param   mixed $topic       topic
-	 * @param   mixed $type        type
-	 * @param   bool  $moderators  moderators
-	 * @param   bool  $admins      admins
-	 * @param   mixed $excludeList exclude list
+	 * @param   int    $catid        catid
+	 * @param   mixed  $topic        topic
+	 * @param   mixed  $type         type
+	 * @param   bool   $moderators   moderators
+	 * @param   bool   $admins       admins
+	 * @param   mixed  $excludeList  exclude list
 	 *
 	 * @return array
 	 * @since Kunena
@@ -895,10 +901,11 @@ window.addEvent('domready', function(){
 			$adminlist = array();
 		}
 
-		$query = new KunenaDatabaseQuery;
-		$query->select('u.id, u.name, u.username, u.email');
-		$query->from('#__users AS u');
-		$query->where("u.block=0");
+		$db    = Factory::getDBO();
+		$query = $db->getQuery(true);
+		$query->select('u.id, u.name, u.username, u.email')
+			->from('#__users AS u')
+			->where("u.block=0");
 		$userlist = array();
 
 		if (!empty($subslist))
@@ -965,7 +972,7 @@ window.addEvent('domready', function(){
 			}
 
 			$db = Factory::getDBO();
-			$db->setQuery((string) $query);
+			$db->setQuery($query);
 
 			try
 			{
@@ -981,8 +988,8 @@ window.addEvent('domready', function(){
 	}
 
 	/**
-	 * @param   KunenaForumTopic $topic loadSubscribers
-	 * @param   bool             $type  type
+	 * @param   KunenaForumTopic  $topic  loadSubscribers
+	 * @param   bool              $type   type
 	 *
 	 * @return array
 	 * @since Kunena
@@ -997,17 +1004,17 @@ window.addEvent('domready', function(){
 		if ($type & self::TOPIC_SUBSCRIPTION)
 		{
 			// Get topic subscriptions
-			$querytopic = $db->getQuery(true);
-			$querytopic->select($db->quoteName('user_id'));
-			$querytopic->from($db->quoteName('#__kunena_user_topics') . 'AS ut');
-			$querytopic->leftJoin('#__kunena_users AS ku ON ut.user_id = ku.userid');
-			$querytopic->where('ut.topic_id =' . $topic->id);
-			$querytopic->andWhere('ut.subscribed=1');
-			$querytopic->andWhere('ku.banned <>0');
-			$querytopic->orWhere('ku.banned IS NULL');
-			$querytopic->andWhere('ut.topic_id =' . $topic->id);
-			$querytopic->andWhere('ut.subscribed=1');
-			$querytopic->group($db->quoteName('user_id'));
+			$querytopic = $db->getQuery(true)
+				->select($db->quoteName('user_id'))
+				->from($db->quoteName('#__kunena_user_topics', 'ut'))
+				->leftJoin($db->quoteName('#__kunena_users', 'ku') . ' ON ' . $db->quoteName('ut.user_id') . ' = ' . $db->quoteName('ku.userid'))
+				->where($db->quoteName('ut.topic_id') . ' = ' . $db->quote($topic->id))
+				->where($db->quoteName('ut.subscribed') . ' = 1')
+				->where($db->quoteName('ku.banned') . ' <> 0')
+				->where($db->quoteName('ku.banned') . ' IS NULL')
+				->where($db->quoteName('ut.topic_id') . ' = ' . $db->quote($topic->id))
+				->where($db->quoteName('ut.subscribed') . ' = 1')
+				->group($db->quoteName('user_id'));
 
 			$query[] = $querytopic;
 		}
@@ -1015,23 +1022,22 @@ window.addEvent('domready', function(){
 		if ($type & self::CATEGORY_SUBSCRIPTION)
 		{
 			// Get category subscriptions
-			$querycat = $db->getQuery(true);
-			$querycat->select($db->quoteName('user_id'));
-			$querycat->from($db->quoteName('#__kunena_user_categories') . 'AS ut');
-			$querycat->leftJoin('#__kunena_users AS ku ON ut.user_id = ku.userid');
-			$querycat->where($db->quoteName('category_id') . '=' . $category->id);
-			$querycat->andWhere('ut.subscribed=1');
-			$querycat->andWhere('ku.banned <>0');
-			$querycat->orWhere('ku.banned IS NULL');
-			$querycat->andWhere($db->quoteName('category_id') . '=' . $category->id);
-			$querycat->andWhere('ut.subscribed=1');
-			$querycat->group($db->quoteName('user_id'));
-
-			$query[] = $querycat;
+			$querycat = $db->getQuery(true)
+				->select($db->quoteName('user_id'))
+				->from($db->quoteName('#__kunena_user_categories', 'ut'))
+				->leftJoin($db->quoteName('#__kunena_users', 'ku') . ' ON ' . $db->quoteName('ut.user_id') . ' = ' . $db->quoteName('ku.userid'))
+				->where($db->quoteName('category_id') . ' = ' . $db->quote($category->id))
+				->andWhere($db->quoteName('ut.subscribed') . ' = 1')
+				->andWhere($db->quoteName('ku.banned') . ' <> 0')
+				->orWhere($db->quoteName('ku.banned') . ' IS NULL')
+				->andWhere($db->quoteName('category_id') . ' = ' . $db->quote($category->id))
+				->andWhere($db->quoteName('ut.subscribed') . ' = 1')
+				->group($db->quoteName('user_id'));
+			$query[]  = $querycat;
 		}
 
 		$query = implode(' UNION ', $query);
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		try
 		{

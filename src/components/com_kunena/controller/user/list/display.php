@@ -22,47 +22,42 @@ use Joomla\CMS\MVC\Controller\BaseController;
 class ComponentKunenaControllerUserListDisplay extends KunenaControllerDisplay
 {
 	/**
+	 * @var
+	 * @since Kunena
+	 */
+	public $state;
+	/**
+	 * @var
+	 * @since Kunena
+	 */
+	public $me;
+	/**
+	 * @var
+	 * @since Kunena
+	 */
+	public $total;
+	/**
+	 * @var
+	 * @since Kunena
+	 */
+	public $users;
+	/**
+	 * @var
+	 * @since Kunena
+	 */
+	public $pagination;
+	/**
 	 * @var string
 	 * @since Kunena
 	 */
 	protected $name = 'User/List';
 
 	/**
-	 * @var
-	 * @since Kunena
-	 */
-	public $state;
-
-	/**
-	 * @var
-	 * @since Kunena
-	 */
-	public $me;
-
-	/**
-	 * @var
-	 * @since Kunena
-	 */
-	public $total;
-
-	/**
-	 * @var
-	 * @since Kunena
-	 */
-	public $users;
-
-	/**
-	 * @var
-	 * @since Kunena
-	 */
-	public $pagination;
-
-	/**
 	 * Load user list.
 	 *
-	 * @throws Exception
-	 * @throws null
 	 * @since Kunena
+	 * @throws null
+	 * @throws Exception
 	 */
 	protected function before()
 	{
@@ -134,14 +129,14 @@ class ComponentKunenaControllerUserListDisplay extends KunenaControllerDisplay
 	 * Prepare document.
 	 *
 	 * @return void
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	protected function prepareDocument()
 	{
 		$page      = $this->pagination->pagesCurrent;
 		$pages     = $this->pagination->pagesTotal;
-		$pagesText = $page > 1 ? " ({$page}/{$pages})" : '';
+		$pagesText = ($page > 1 ? " - " . Text::_('COM_KUNENA_PAGES') . " {$page}" : '');
 
 		$app       = Factory::getApplication();
 		$menu_item = $app->getMenu()->getActive();
@@ -155,7 +150,7 @@ class ComponentKunenaControllerUserListDisplay extends KunenaControllerDisplay
 
 			if (!empty($params_title))
 			{
-				$title = $params->get('page_title');
+				$title = $params->get('page_title') . $pagesText;
 				$this->setTitle($title);
 			}
 			else
@@ -166,23 +161,23 @@ class ComponentKunenaControllerUserListDisplay extends KunenaControllerDisplay
 
 			if (!empty($params_keywords))
 			{
-				$keywords = $params->get('menu-meta_keywords');
+				$keywords = $params->get('menu-meta_keywords') . $pagesText;
 				$this->setKeywords($keywords);
 			}
 			else
 			{
-				$keywords = $this->config->board_title . ', ' . Text::_('COM_KUNENA_VIEW_USER_LIST');
+				$keywords = $this->config->board_title . ', ' . Text::_('COM_KUNENA_VIEW_USER_LIST') . $pagesText;
 				$this->setKeywords($keywords);
 			}
 
 			if (!empty($params_description))
 			{
-				$description = $params->get('menu-meta_description');
+				$description = $params->get('menu-meta_description') . $pagesText;
 				$this->setDescription($description);
 			}
 			else
 			{
-				$description = Text::_('COM_KUNENA_VIEW_USER_LIST') . ': ' . $this->config->board_title;
+				$description = Text::_('COM_KUNENA_VIEW_USER_LIST') . ': ' . $this->config->board_title . $pagesText;
 				$this->setDescription($description);
 			}
 		}

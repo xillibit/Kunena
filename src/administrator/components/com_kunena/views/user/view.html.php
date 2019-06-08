@@ -39,17 +39,12 @@ class KunenaAdminViewUser extends KunenaView
 		$this->editavatar = ($avatarint instanceof KunenaAvatarKunena) && $this->user->avatar ? true : false;
 		$this->avatar     = $this->user->getAvatarImage(KunenaFactory::getTemplate()->params->get('avatarType'), 'thumb');
 
-		if (KunenaFactory::getTemplate()->params->get('fontawesome'))
-		{
-			Factory::getDocument()->addScript('https://use.fontawesome.com/releases/v5.8.1/js/all.js', array(), array('defer' => true));
-		}
-
 		// Make the select list for the moderator flag
 		$yesnoMod [] = HTMLHelper::_('select.option', '1', Text::_('COM_KUNENA_YES'));
 		$yesnoMod [] = HTMLHelper::_('select.option', '0', Text::_('COM_KUNENA_NO'));
 
 		// Build the html select list
-		$this->selectMod = HTMLHelper::_('select.genericlist', $yesnoMod, 'moderator', 'class="inputbox" size="2"', 'value', 'text', $this->user->moderator);
+		$this->selectMod = HTMLHelper::_('select.genericlist', $yesnoMod, 'moderator', 'class="inputbox form-control" size="2"', 'value', 'text', $this->user->moderator);
 
 		// Make the select list for the moderator flag
 		$yesnoOrder [] = HTMLHelper::_('select.option', '0', Text::_('COM_KUNENA_USER_ORDER_ASC'));
@@ -128,7 +123,7 @@ class KunenaAdminViewUser extends KunenaView
 			$this->settings[] = $item;
 		}
 
-		$this->selectOrder = HTMLHelper::_('select.genericlist', $yesnoOrder, 'neworder', 'class="inputbox" size="2"', 'value', 'text', $this->user->ordering);
+		$this->selectOrder = HTMLHelper::_('select.genericlist', $yesnoOrder, 'neworder', 'class="inputbox form-control" size="2"', 'value', 'text', $this->user->ordering);
 		$this->modCats     = $this->get('listmodcats');
 		$this->selectRank  = $this->get('listuserranks');
 		$this->social      = $this->user->socialButtons();

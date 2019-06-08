@@ -12,6 +12,7 @@
 defined('_JEXEC') or die();
 
 use Joomla\CMS\Factory;
+use Joomla\Database\QueryInterface;
 
 jimport('joomla.application.component.modellist');
 
@@ -47,12 +48,12 @@ class KunenaAdminModelRanks extends Joomla\CMS\MVC\Model\ListModel
 	/**
 	 * Method to auto-populate the model state.
 	 *
-	 * @param   string $ordering  ordering
-	 * @param   string $direction direction
+	 * @param   string  $ordering   ordering
+	 * @param   string  $direction  direction
 	 *
 	 * @return    void
-	 * @throws Exception
 	 * @since Kunena
+	 * @throws Exception
 	 */
 	protected function populateState($ordering = null, $direction = null)
 	{
@@ -92,7 +93,7 @@ class KunenaAdminModelRanks extends Joomla\CMS\MVC\Model\ListModel
 	}
 
 	/**
-	 * @param   string $id id
+	 * @param   string  $id  id
 	 *
 	 * @return string
 	 *
@@ -109,7 +110,7 @@ class KunenaAdminModelRanks extends Joomla\CMS\MVC\Model\ListModel
 	}
 
 	/**
-	 * @return JDatabaseQuery
+	 * @return QueryInterface
 	 * @since Kunena
 	 */
 	protected function getListQuery()
@@ -170,7 +171,7 @@ class KunenaAdminModelRanks extends Joomla\CMS\MVC\Model\ListModel
 				$query->order('a.rank_id ' . $direction);
 		}
 
-		$db->setQuery((string) $query);
+		$db->setQuery($query);
 
 		return $query;
 	}
