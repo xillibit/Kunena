@@ -10,6 +10,7 @@
  **/
 defined('_JEXEC') or die;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Helper\MediaHelper;
 
 $this->addScript('summernote-bs4.js');
 $this->addStyleSheet('summernote-bs4.css');
@@ -25,10 +26,34 @@ $settings         = $templatesettings->get('wysibb');
 ?>
 <script>
 $(document).ready(function() {
-	  $('#editor').summernote();
+	
+	
+	  $('#editor').summernote({
+		  map: {
+		        apiKey: 'GOOGLE_API_KEY',
+		        // This will be used when map is initialized in the dialog.
+		        center: {
+		          lat: -33.8688,
+		          lng: 151.2195
+		        },
+		        zoom: 13
+		    },
+		  toolbar: [
+		    // [groupName, [list of button]]
+		    ['style', ['bold', 'italic', 'underline']],
+		    ['font', ['strikethrough', 'superscript', 'subscript']],
+		    ['fontsize', ['fontsize']],
+		    ['color', ['color']],
+		    ['para', ['ul', 'ol', 'hr', 'paragraph']],
+		    ['height', ['table', 'link', 'picture', 'map']]
+		  ]
+		});
 	});
 </script>
-
+<?php 
+$this->addScript('summernote-map-plugin.js');
+$this->addScript('summernote-insertpicture-plugin.js');
+?>
 <div class="control-group">
 	<label class="control-label"><?php echo Text::_('COM_KUNENA_MESSAGE'); ?></label>
 	<div class="controls">

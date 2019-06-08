@@ -182,7 +182,17 @@ $settings         = $templatesettings->get('wysibb');
 ?>
 <script>
 $(document).ready(function() {
-	  $('[id^=editor-]').summernote();
+	$('[id^=editor-]').summernote({
+		  toolbar: [
+		    // [groupName, [list of button]]
+		    ['style', ['bold', 'italic', 'underline', 'clear']],
+		    ['font', ['strikethrough', 'superscript', 'subscript']],
+		    ['fontsize', ['fontsize']],
+		    ['color', ['color']],
+		    ['para', ['ul', 'ol', 'paragraph']],
+		    ['height', ['height']]
+		  ]
+		});
 	});
 </script>
 
