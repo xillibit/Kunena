@@ -1,7 +1,14 @@
 {
   "name": "kunena/kunena-forum",
   "description": "Kunena forum for joomla",
+  "keywords": ["kunena", "forum"],
+  "homepage": "https://github.com/Kunena/Kunena-Forum/",
   "license": "GPL-3.0-or-later",
+  "support": {
+        "issues": "https://github.com/Kunena/Kunena-Forum/issues",
+        "forum": "https://www.kunena.org/forum/index",
+        "docs": "https://www.kunena.org/docs/en"
+  },
   "require": {
     "php": ">=7.2.0",
     "consolidation/robo": "^1",
@@ -12,7 +19,10 @@
     "symfony/yaml": "~3|~4",
     "ext-simplexml": "*",
     "ext-dom": "*",
-    "ext-json": "*"
+    "ext-json": "*",
+    "leafo/lessphp": "~0.5.0",
+        "vanilla/nbbc": "~2.2.3",
+        "scssphp/scssphp": "~1.0.0"
   },
   "require-dev": {
     "phpunit/phpunit": "~8.0",
