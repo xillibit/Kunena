@@ -19,6 +19,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
 use Kunena\Forum\Libraries\Forum\KunenaForum;
 use Kunena\Forum\Libraries\Installer;
+use Kunena\Forum\Libraries\Install\KunenaModelInstall;
 
 /**
  * Kunena package installer script.
@@ -199,6 +200,9 @@ class Pkg_KunenaInstallerScript extends InstallerScript
 		{
 			@apc_clear_cache();
 		}
+
+		$installer = new KunenaModelInstall;
+		$installer->createMenu();
 
 		return true;
 	}
