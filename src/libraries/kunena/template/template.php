@@ -1314,6 +1314,12 @@ HTML;
 				$icon           = $this->get_xml_systemicon($xml, $topic->icon_id, $topicicontype);
 			}
 
+			if ($topic->hold == 4)
+			{
+				$topic->icon_id = 506;
+				$icon           = $this->get_xml_systemicon($xml, $topic->icon_id, $topicicontype);
+			}
+
 			if ($topic->moved_id > 0)
 			{
 				$topic->icon_id = 500;

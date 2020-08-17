@@ -783,6 +783,11 @@ window.addEvent('domready', function(){
 			$hold [1] = 1;
 		}
 
+		if($user->userid > 0 && $user->userid == JFactory::getUser()->id)
+		{
+			$hold [4] = 4;
+		}
+
 		if (($config->mod_see_deleted == '0' && $this->isAdmin($user, $catid))
 			|| ($config->mod_see_deleted == '1' && $this->isModerator($user, $catid))
 		)

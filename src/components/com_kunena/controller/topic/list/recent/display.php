@@ -93,6 +93,10 @@ class ComponentKunenaControllerTopicListRecentDisplay extends ComponentKunenaCon
 		{
 			$hold = '0,2,3';
 		}
+		elseif ($this->me->userid > 0 && $this->me->userid == JFactory::getUser()->id)
+		{
+			$hold = '0,4';
+		}
 		else
 		{
 			$hold = '0';
@@ -106,7 +110,7 @@ class ComponentKunenaControllerTopicListRecentDisplay extends ComponentKunenaCon
 
 		$finder = new KunenaForumTopicFinder;
 		$finder->filterByMoved(false);
-
+		echo 'case '.$this->state->get('list.mode');
 		switch ($this->state->get('list.mode'))
 		{
 			case 'topics' :

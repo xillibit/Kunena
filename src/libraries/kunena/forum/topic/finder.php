@@ -283,7 +283,7 @@ class KunenaForumTopicFinder extends KunenaDatabaseObjectFinder
 	}
 
 	/**
-	 * Filter by hold (0=published, 1=unapproved, 2=deleted, 3=topic deleted).
+	 * Filter by hold (0=published, 1=unapproved, 2=deleted, 3=topic deleted, 4=draft).
 	 *
 	 * @param   array $hold List of hold states to display.
 	 *

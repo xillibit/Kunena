@@ -34,6 +34,7 @@
 		<icon id="503" name="sticky_locked" published="1" b2="lock" b3="file" fa="lock" src="system/sticky_locked.png" />
 		<icon id="504" name="sticky" published="1" b2="pin" b3="pushpin" fa="map-pin" src="system/sticky.png" />
 		<icon id="505" name="locked" published="1" b2="lock" b3="file" fa="lock" src="system/locked.png" />
+		<icon id="506" name="draft" published="1" b2="lock" b3="file" fa="firstdraft" src="system/locked.png" />
 	</icons>
 
     <!-- icons type="system" width="16" height="16">

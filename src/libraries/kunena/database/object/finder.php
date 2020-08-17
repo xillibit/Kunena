@@ -255,7 +255,7 @@ abstract class KunenaDatabaseObjectFinder
 
 		if ($query->group)
 		{
-			$countQuery = $this->db->getQuery(true);
+			$countQuery = $this->db->getQuery(true); 
 			$countQuery->select('COUNT(*)')->from("({$query}) AS c");
 			$this->db->setQuery($countQuery);
 		}
